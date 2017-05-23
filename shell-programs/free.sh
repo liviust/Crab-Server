@@ -24,7 +24,7 @@ path_to_vfdb_output="/bip7_disk/WWW/WWW/www/Crab/${filename}/vfdb-reports"
 path_to_card_output="/bip7_disk/WWW/WWW/www/Crab/${filename}/card-reports"
 #echo $path_to_quast_output
 
-#Assembling
+#Assembling (Assembly Free)
 #./Model/canu/Linux-amd64/bin/canu -d ${filename}/ -p ${AssemblyPrefix} gnuplot=/usr/bin/gnuplot genomeSize=$genomeSize useGrid=false maxThreads=10 ${types_of_analysis} ${target_file}
 
 #The assembled contigs
