@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="cacert.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="cacert.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="cert.p12" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="privkey.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="service-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="service-rsa-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="test.ini" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="test_public_key.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/StriDe_GUI/" local="130989126420000000" remote="131038619130000000" Dst="0" />
+<file name="cacert.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="cacert.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="cert.p12" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="privkey.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="service-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="service-rsa-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="test.ini" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="test_public_key.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/bioinfo/" local="130989126420000000" remote="131113838130000000" Dst="0" />
+<file name="cacert.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="cacert.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="cert.p12" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="privkey.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="service-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="service-rsa-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="test.ini" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="test_public_key.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Thesis/" local="130989126420000000" remote="131315161090000000" Dst="0" />
+<file name="cacert.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="cacert.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="cert.p12" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="privkey.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="service-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="service-rsa-12345.json" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="test.ini" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+<file name="test_public_key.pem" server="140.123.104.107//bip7_disk/WWW/WWW/www/Crab/" local="130989126420000000" remote="131332013970000000" Dst="0" />
+</dwsync>

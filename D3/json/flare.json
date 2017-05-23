@@ -1,0 +1,22 @@
+{
+ "name": "VFs",
+ "children": [
+  {
+   "name": "display",
+   "children": [
+    {"name": "D1", "size": 1},
+    {"name": "D2", "size": 1},
+    {"name": "D3", "size": 1}
+   ]
+  },
+  {
+   "name": "physics",
+   "children": [
+    {"name": "C1", "size": 1},
+    {"name": "C2", "size": 1},
+    {"name": "C3", "size": 1},
+    {"name": "C4", "size": 1}
+   ]
+  }
+ ]
+}

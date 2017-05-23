@@ -1,0 +1,43 @@
+thedad,name,value
+ABC transporter protein,hasD,1
+ADP-heptose synthase,rfaE,2
+catalase,katA,3
+catalase-peroxidase KatB,katB,4
+chain length regulator (capsular polysaccharide biosynthesis),wzc,5
+chemotaxis protein CheA,cheA,6
+chemotaxis-specific methylesterase CheB,cheB,7
+ClpB,clpV1,8
+cytoplasmic protein,sciI,9
+drug efflux transport protein MtrD,mtrD,1
+Ferric aerobactin receptor precursor,iutA,2
+ferrichrysobactin receptor,fct,3
+fimbrial outer membrane usher protein,mrpC,4
+fimbrial usher protein,stfC,5
+flagellar hook-associated protein FlgK,flgK,6
+flagellar biosynthesis protein FlhA,flhA,1
+flagellar M-ring protein FliF,fliF,1
+flagellar motor switch protein FliM,fliM,1
+flagellum-specific ATP synthase,fliI,1
+glucose-6-phosphate isomerase,pgi,1
+glutamate-1-semialdehyde aminotransferase,hemL,1
+"heme acquisition ABC transporter, ATP-binding/permease protein",hasD,1
+hemin receptor precursor,hemR,1
+hemolysin determinant,shlB,2
+hemolysin,shlA,3
+hypothetical protein,mgtB,4
+hypothetical protein,phoQ,5
+hypothetical protein,YPO0504,6
+hypothetical protein,YPO0507,7
+lipid A export ATP-binding/permease protein,msbA,8
+"Mannose-1-phosphate guanylytransferase, ManC protein",YE105_C1500,9
+methyl-accepting chemotaxis protein CheD,cheD,1
+Mg2+ transport protein,mgtB,2
+molecular chaperone DnaK,CT396,3
+molecular chaperone GroEL,htpB,4
+non-hemolytic phospholipase C precursor,plcN,5
+outer membrane receptor FepA,iroN,6
+oxygen-independent coproporphyrinogen III oxidase,hemN,7
+phosphoglucosamine mutase,mrsA/glmM,8
+Phosphomannomutase,YPK_3178,9
+putative UDP-glucose 6-dehydrogenase,BJAB07104_00096,10
+"sigma S (sigma 38) factor of RNA polymerase, major sigmafactor during stationary phase",rpoS,11
