@@ -147,15 +147,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-	$("#btnDelete").click(function(){
-		$(this).data('clicked', true);
-	});
-
-	if($('#btnDelete').data('clicked')) {
-		console.log('Clicked');
-	}
-	
-	
 	$.ajax({
 	  type: "POST",
 	  url: "submit.php",
@@ -203,49 +194,32 @@ $(document).ready(function(){
 		
 		oTable.on('click','tr',function() {
 			
-			var row = oTable.fnGetData(this);			
+			var row = oTable.fnGetData(this);		
 			console.log(row);	
-					
-			if(table.row('.selected')){
 			
-				$('#btnDelete').click( function () {			
+			$('#btnDelete').click( function () {			
+				
+				bootbox.confirm("Are you sure you want to delete this job?", function(result) {
 					
-					bootbox.confirm("Are you sure you want to delete this job?", function(result) {
-						if(result == true){
-							//alert("Confirm result: " + result);
-							console.log(row.Submission, row.Title, row.Status, google_id);	
-							//table.row('.selected').remove().draw(false);
-							
-							$.ajax({
-								type: "POST",
-								cache:false,
-								url: "deleteSubmission.php",
-								data: {job_id: row.Submission, title: row.Title, status: row.Status, user_id: google_id},
-								success: function(html){
-									alert(html);
-									table.row('.selected').remove().draw(false);
-								}
-							});					
-						}								  
-					});				
-				});
-			}
+					if(result == true){
+
+						console.log(row.Submission, row.Title, row.Status, google_id);
+						
+						$.ajax({
+							type: "POST",
+							cache:false,
+							url: "deleteSubmission.php",
+							data: {job_id: row.Submission, title: row.Title, status: row.Status, user_id: google_id},
+							success: function(html){
+								alert(html);
+								table.row('.selected').remove().draw(false);
+								location.reload();
+							}
+						});					
+					}								  
+				});				
+			});
 		});
-			
-/*			$.ajax({
-				type:'POST',
-				url:'delete.php',
-				data:{del_id:del_id},
-				success: function(data){
-					 if(data=="YES"){
-						 $ele.fadeOut().remove();
-					 }else{
-						 alert("can't delete the row")
-					 }
-				}
-			
-				 })
-			})*/
 
 /*		oTable.on('click','tr',function() {	
 			var row = oTable.fnGetData(this);

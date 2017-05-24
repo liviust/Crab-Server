@@ -49,43 +49,62 @@
 	
 			foreach ($rows as $c) {
 				$process_id = !empty($c->process_id) ? $c->process_id : '';	
+				$status = !empty($c->status) ? $c->status : '';
 			}			
-			
-			//print_r($process_id);
-						
-			//This will kill all processes that have the parent process ID $process_id.
-			exec("pkill -P $process_id", $output, $return);
-			
-			// Return will return non-zero upon an error
-			if (!$return) {
-				//echo "PDF Created Successfully";
+
+			if($status != "Done"){
 				
+				//print_r($process_id);
+							
+				//This will kill all processes that have the parent process ID $process_id.
+				exec("pkill -P $process_id", $output, $return);
+				
+				// Return will return non-zero upon an error
+				if (!$return) {
+					//echo "PDF Created Successfully";
+					
+					//delete
+					$bulk = new MongoDB\Driver\BulkWrite;
+					$bulk->delete(['job_id' => $job_id], ['limit' => 1]);		
+					$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
+					$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);		
+		
+					//print_r($filter);	
+					
+					$dirPath = '/bip7_disk/WWW/WWW/www/Crab/uploads/'.$user_id.'/'.$job_id;			
+					system('rm -rf ' . escapeshellarg($dirPath), $retval);
+					
+					if($retval == 0){
+						// UNIX commands return zero on success
+						echo "Your job has been deleted successfully!";
+					}else{
+						echo "Oops! Something went wrong!";
+					}				
+					
+				} else {
+					echo "-bash: kill: ($process_id) - Operation not permitted";
+				}
+			}else{ //Done
+
 				//delete
 				$bulk = new MongoDB\Driver\BulkWrite;
 				$bulk->delete(['job_id' => $job_id], ['limit' => 1]);		
 				$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
-				$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);		
-	
-				//print_r($filter);	
+				$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);
 				
 				$dirPath = '/bip7_disk/WWW/WWW/www/Crab/uploads/'.$user_id.'/'.$job_id;			
 				system('rm -rf ' . escapeshellarg($dirPath), $retval);
 				
 				if($retval == 0){
-					// UNIX commands return zero on success
 					echo "Your job has been deleted successfully!";
 				}else{
 					echo "Oops! Something went wrong!";
-				}				
-				
-			} else {
-				echo "-bash: kill: ($process_id) - Operation not permitted";
+				}
 			}
 						
 		}catch (MongoDB\Driver\Exception\Exception $e) {
 					
 			echo $e->getMessage(), "\n";
-		}		
-		
+		}	
 	}
 ?> 
