@@ -28,6 +28,11 @@
 	$client->setClientSecret($client_secret);
 	$client->setRedirectUri($redirect_uri);
 	$client->setDeveloperKey($api_key);
+	
+	//UPDATE:
+	$client->setAccessType("offline");
+	$client->setApprovalPrompt("force");	
+	
 	$client->addScope(array(
 		//Know your basic profile info and list of people in your circles.
 		 "https://www.googleapis.com/auth/plus.login",
@@ -72,6 +77,9 @@
 	  $client->setAccessToken($_SESSION['access_token']);
 	} else {
 	  $authUrl = $client->createAuthUrl(); // Login with Google+
+		
+		//UPDATE:
+		$_SESSION['access_token'] = $client->getAccessToken();	
 	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -117,7 +125,7 @@
 	?>
     </h1>
   </div>
-  <button id="button" type="button" name="remove_levels" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete selected row</button><br /><br />
+  <button id="btnDelete" type="button" name="remove_levels" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete selected row</button><br /><br />
   <table id="tableJobs" class="table table-striped table-bordered display table-hover" style="cursor:pointer" cellspacing="0" width="100%">
   </table>
   
@@ -138,6 +146,16 @@
 <script src="http://bootboxjs.com/bootbox.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+
+	$("#btnDelete").click(function(){
+		$(this).data('clicked', true);
+	});
+
+	if($('#btnDelete').data('clicked')) {
+		console.log('Clicked');
+	}
+	
+	
 	$.ajax({
 	  type: "POST",
 	  url: "submit.php",
@@ -183,37 +201,36 @@ $(document).ready(function(){
 		
 		<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?>
 		
-		oTable.on('click','tr',function() {	
-			var row = oTable.fnGetData(this);
+		oTable.on('click','tr',function() {
 			
-			console.log(row);
+			var row = oTable.fnGetData(this);			
+			console.log(row);	
+					
+			if(table.row('.selected')){
 			
-			$('#button').click( function () {
-				if(table.row('.selected')){
-				bootbox.confirm("Are you sure you want to delete this job?", function(result) {
-					if(result == true){
-						//alert("Confirm result: " + result);
-						console.log(row.Submission, row.Title, row.Status, google_id);	
-						//table.row('.selected').remove().draw(false);
-						
-						$.ajax({
-							type: "POST",
-							cache:false,
-							url: "deleteSubmission.php",
-							data: {job_id: row.Submission, title: row.Title, status: row.Status, user_id: google_id},
-							success: function(html){
-								alert(html);
-								table.row('.selected').remove().draw(false);
-							}
-						});
-						
-					}								  
-				});	
-				}
-			});	
-		});	
-	 
-
+				$('#btnDelete').click( function () {			
+					
+					bootbox.confirm("Are you sure you want to delete this job?", function(result) {
+						if(result == true){
+							//alert("Confirm result: " + result);
+							console.log(row.Submission, row.Title, row.Status, google_id);	
+							//table.row('.selected').remove().draw(false);
+							
+							$.ajax({
+								type: "POST",
+								cache:false,
+								url: "deleteSubmission.php",
+								data: {job_id: row.Submission, title: row.Title, status: row.Status, user_id: google_id},
+								success: function(html){
+									alert(html);
+									table.row('.selected').remove().draw(false);
+								}
+							});					
+						}								  
+					});				
+				});
+			}
+		});
 			
 /*			$.ajax({
 				type:'POST',
