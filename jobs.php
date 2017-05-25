@@ -213,7 +213,7 @@ $(document).ready(function(){
 							success: function(html){
 								alert(html);
 								table.row('.selected').remove().draw(false);
-								location.reload();
+								//location.reload();
 							}
 						});					
 					}								  
