@@ -12,7 +12,7 @@
 	/*
 	 * Configuration and setup Google API
 	 */
-	$client_id = '888974174004-tfj3klejes1c8ghq5lam83opbgm11e77.apps.googleusercontent.com'; //Google client ID
+	$client_id = ''; //Google client ID
 	$client_secret = ''; //Google client secret
 	$redirect_uri = 'http://bioinfo.cs.ccu.edu.tw/Crab/index.php'; //Callback URL
 	$api_key = '';
@@ -23,16 +23,11 @@
 	
 	//Create Client Request to access Google API
 	$client = new Google_Client(); //Google_Client is a class provided by the Google PHP SDK
-	$client->setApplicationName("PHP Google OAuth Login Example");
+	$client->setApplicationName("Cяab Server");
 	$client->setClientId($client_id);
 	$client->setClientSecret($client_secret);
 	$client->setRedirectUri($redirect_uri);
 	$client->setDeveloperKey($api_key);
-	
-	//UPDATE:
-	$client->setAccessType("offline");
-	$client->setApprovalPrompt("force");	
-	
 	$client->addScope(array(
 		//Know your basic profile info and list of people in your circles.
 		 "https://www.googleapis.com/auth/plus.login",
@@ -45,6 +40,9 @@
 		//"https://www.googleapis.com/auth/plus.profile.emails.read"
 	));
 	
+	## get refresh token from google api
+	//$client->setAccessType('offline');
+	//$client->setApprovalPrompt('force'); 
 
 	//Send Client Request
 	$service = new Google_Service_Oauth2($client);
@@ -66,13 +64,22 @@
 	
 	//Step 1:  The user has not authenticated we give them a link to login
 	if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-		$client->setAccessToken($_SESSION['access_token']);
+		
+		$client->setAccessToken($_SESSION['access_token']);		
+		echo '<pre>',print_r($_SESSION['access_token']),'</pre>';
+		//echo $client->isAccessTokenExpired();
+		
 	} else {
 	  	$authUrl = $client->createAuthUrl(); // Login with Google+
-		
-		//UPDATE:
-		$_SESSION['access_token'] = $client->getAccessToken();	  
 	}
+	
+	// Refresh the token if it's expired.
+	if($client->isAccessTokenExpired() && empty($_GET['logout'])) {
+		$authUrl = $client->createAuthUrl();
+		header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
+		exit;
+	}	
+	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -86,7 +93,7 @@
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
 <link rel="stylesheet" type="text/css" href="css/StepsProgressForm.css" />
-<link rel="icon" href="images/crab.png">
+<link rel="icon" type="image/png" href="images/crab.png">
 <style>
 .footer {
 /*background-color: #f5f5f5;*/
@@ -116,8 +123,9 @@ small, .small {
 }*/
 </style>
 </head>
-<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
-<div class="container">
+<body>
+<!--<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
+--><div class="container">
   <div class="page-header">
     <?php 
 		if(isset($authUrl)){ 
@@ -282,8 +290,8 @@ small, .small {
           <option value="" selected>-- Select analysis type --</option>
           <option value="FullWorkflow">Full Workflow</option>
           <option value="AssemblyFree">Assembly Free</option>
-          <option value="AutoFullWorkflow">Auto Full Workflow, For impatient people</option>
-          <option value="AutoAssemblyFree">Auto Assembly Free, For impatient people</option> 
+          <option value="AutoFullWorkflow" disabled="disabled">Auto Full Workflow, For impatient people</option>
+          <option value="AutoAssemblyFree" disabled="disabled">Auto Assembly Free, For impatient people</option> 
         </select>
       </div>
       <div class="form-group">
