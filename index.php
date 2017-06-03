@@ -290,8 +290,8 @@ small, .small {
           <option value="FullWorkflow">Full Workflow</option>
           <option value="AssemblyFree">Assembly Free</option>
           <!--For impatient people-->
-          <option value="AutoFullWorkflow">Auto Full Workflow</option>
-          <option value="AutoAssemblyFree">Auto Assembly Free</option> 
+          <option value="AutoFullWorkflow">Auto Full Workflow (AFW)</option>
+          <option value="AutoAssemblyFree">Auto Assembly Free (AAF)</option>
         </select>
       </div>
       <div class="form-group">
@@ -319,8 +319,8 @@ small, .small {
 		  echo("<button id='initial_step' type='button' class='btn btn-primary' onclick='goToNextStep(2)'>Activate Step 2</button>");
 		  
 		  //Button trigger modal
-		  echo("<button id='btnAutoFullWorkflow' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoFullWorkflow' style='display: none;'>Activate</button>");
-		  echo("<button id='btnAutoAssemblyFree' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoAssemblyFree' style='display: none;'>Activate</button>");
+		  echo("<button id='btnAutoFullWorkflow' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoFullWorkflow' style='display: none;'>Activate AFW</button>");
+		  echo("<button id='btnAutoAssemblyFree' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoAssemblyFree' style='display: none;'>Activate AAF</button>");
 		  
 	  } else{
 		  echo("<button type='button' class='btn btn-info' onClick=\"alert('You must log in first.')\">Activate Step 2</button>");
@@ -495,25 +495,24 @@ small, .small {
           <small id="fileHelp" class="form-text text-muted">The title of the submission</small> </div>
         <!-- Step Overview - START -->
         
-        <div id="switch1" style="display:block">
+        <div id="switch1" style="display:block"> 
           <!--Oxford Nanopore Technology-->
           <div class="form-group">
             <label for="">Technology</label>
             <input type="text" class="form-control" id="OverviewradioTech" placeholder="" readonly>
             
-<!--            <label class="custom-control custom-radio">
+            <!--            <label class="custom-control custom-radio">
               <input id="Overviewpacbio-raw" name="OverviewradioTech" value="1" type="radio" class="custom-control-input">
               <span class="custom-control-indicator"></span> <span class="custom-control-description">-pacbio-raw</span> </label>
             <label class="custom-control custom-radio">
               <input id="Overviewnanopore-raw" name="OverviewradioTech" value="0" type="radio" class="custom-control-input">
-              <span class="custom-control-indicator"></span> <span class="custom-control-description">-nanopore-raw</span> </label>-->
+              <span class="custom-control-indicator"></span> <span class="custom-control-description">-nanopore-raw</span> </label>--> 
           </div>
-          <!--/Oxford Nanopore Technology--> 
-<div class="form-group">
+          <!--/Oxford Nanopore Technology-->
+          <div class="form-group">
             <label for="OverviewRawReads">Raw reads</label>
             <input type="text" class="form-control" id="OverviewRawReads" placeholder="" readonly>
           </div>
-
         </div>
         <div id="switch2" style="display:none">
           <div class="form-group">
@@ -552,10 +551,10 @@ small, .small {
           <!--<label for="OverviewVFDBevalueParameters">Parameters</label>-->
           <input type="text" class="form-control" id="OverviewVFDBevalueParameters" placeholder="-e 0.001" required="required" readonly>
           <small id="fileHelp" class="form-text text-muted">-e e-value cutoff for VFDB</small> </div>
-		<div class="form-group"> 
+        <div class="form-group"> 
           <!--<label for="OverviewVFDBevalueParameters">Parameters</label>-->
           <input type="text" class="form-control" id="OverviewCARDevalueParameters" placeholder="-e 0.001" required="required" readonly>
-          <small id="fileHelp" class="form-text text-muted">-e e-value cutoff for CARD</small> </div>          
+          <small id="fileHelp" class="form-text text-muted">-e e-value cutoff for CARD</small> </div>
         <div id="switch3" style="display:block">
           <div class="form-group">
             <label for="OverviewAssemblyPrefix">Assembly-prefix</label>
@@ -614,6 +613,7 @@ small, .small {
 </footer>
 <!-- footer end --> 
 
+<!-- Dialog start -->
 <div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoFullWorkflow">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -622,16 +622,27 @@ small, .small {
         <h4 class="modal-title">Auto Full Workflow</h4>
       </div>
       <div class="modal-body">
-        <p>For impatient people&hellip;</p>
+        <p>This list describes the settings available and their default setting:</p>
+        <div class="form-group">
+          <label for="SequenceFile">Select a unassembled sequence file</label>
+          <input type="file" class="form-control-file" id="fileToUploadAutoFull" name="SequenceFile" aria-describedby="fileHelp">
+          <p id="msgAutoFull"></p>
+          <small id="fileHelp" class="form-text text-muted">Upload a third-generation sequencing (such as the PacBio RS II or Oxford Nanopore MinION) in FASTA format (2 GB limit).</small> </div>
+        <!--<hr />--> 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" id="AutoFullWorkflowSubmit">Submit</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content --> 
+  </div>
+  <!-- /.modal-dialog --> 
+</div>
+<!-- /.modal --> 
+<!-- Dialog end --> 
 
+<!-- Dialog start -->
 <div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoAssemblyFree">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -640,21 +651,34 @@ small, .small {
         <h4 class="modal-title">Auto Assembly Free</h4>
       </div>
       <div class="modal-body">
-        <p>For impatient people&hellip;</p>
+        <p>This list describes the settings available and their default setting:</p>
+        <!-- AssemblyFree - START -->
+        <div class="form-group">
+          <label for="contigsFile">Select a sequence file</label>
+          <input type="file" class="form-control-file" id="fileToUploadAutoFree" name="contigsFile" aria-describedby="fileHelp">
+          <p id="msgAutoFree"></p>
+          <small id="fileHelp" class="form-text text-muted">Upload the genome assembly components (contigs, scaffolds, chromosomes) in FASTA format (10 MB limit).</small>
+        </div>
+        <!-- AssemblyFree - END -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" id="AutoFullAssemblyFreeSubmit">Submit</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content --> 
+  </div>
+  <!-- /.modal-dialog --> 
+</div>
+<!-- /.modal --> 
+<!-- Dialog end --> 
+
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script> 
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src="js/activeStep.js"></script> 
 <script type="text/javascript" src="js/getFileSize.js"></script> 
 <script type="text/javascript" src="js/getContigSize.js"></script> 
-<script type="text/javascript" src="js/goToNextStep.js"></script>
+<script type="text/javascript" src="js/goToNextStep.js"></script> 
 <script type="text/javascript" src="js/goToAutoStep.js"></script>
 </body>
 </html>

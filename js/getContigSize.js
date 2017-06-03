@@ -4,10 +4,10 @@ function GetContigSize() {
 	if (fi.files.length > 0) {
 		for (var i = 0; i <= fi.files.length - 1; i++) {
 			var fsize = fi.files.item(i).size;
-			document.getElementById('fp').innerHTML = "";
+			document.getElementById('op').innerHTML = "";
 			var sizeInKb = (fsize / 1024 / 1024);
 			var sizeInMb = Math.ceil(sizeInKb*100)/100;
-			document.getElementById('op').innerHTML = document.getElementById('fp').innerHTML + '<br /> ' + 'File Size: <b>' + sizeInMb + '</b> MB';			
+			document.getElementById('op').innerHTML = document.getElementById('op').innerHTML + '<br /> ' + 'File Size: <b>' + sizeInMb + '</b> MB';			
 			
 			if(sizeInMb > sizeLimit){ 			
 				document.getElementById("op").style.color = "red";
