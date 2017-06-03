@@ -614,33 +614,65 @@ small, .small {
 <!-- footer end --> 
 
 <!-- Dialog start -->
-<div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoFullWorkflow">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Auto Full Workflow</h4>
+<form id="AutoFullWorkflowSubmitForm" enctype="multipart/form-data" method="post" action="">
+  <div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoFullWorkflow">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Auto Full Workflow</h4>
+        </div>
+        <div class="modal-body">
+          <p>This list describes the settings available and their default setting:</p>
+          <div class="form-group">
+            <label for="">Technology</label>
+            <label class="custom-control custom-radio">
+              <input id="pacbio-raw-auto" name="autoradioTech" value="1" type="radio" class="custom-control-input">
+              <span class="custom-control-indicator"></span> <span class="custom-control-description">-pacbio-raw</span> </label>
+            <label class="custom-control custom-radio">
+              <input id="nanopore-raw-auto" name="autoradioTech" value="0" type="radio" class="custom-control-input">
+              <span class="custom-control-indicator"></span> <span class="custom-control-description">-nanopore-raw</span> </label>
+          </div>
+          <div class="form-group">
+            <label for="SequenceFile">Select a unassembled sequence file</label>
+            <input type="file" class="form-control-file" id="fileToUploadAutoFull" name="SequenceFile" aria-describedby="fileHelp">
+            <p id="msgAutoFull"></p>
+            <small id="fileHelp" class="form-text text-muted">Upload a third-generation sequencing (such as the PacBio RS II or Oxford Nanopore MinION) in FASTA format (2 GB limit).</small> </div>
+          <div class="form-group">
+            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+            <h3 id="status"></h3>
+            <p id="loaded_n_total"></p>
+          </div>
+          <!--<hr /> --> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="AutoFullWorkflowSubmit">Submit</button>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>This list describes the settings available and their default setting:</p>
-        <div class="form-group">
-          <label for="SequenceFile">Select a unassembled sequence file</label>
-          <input type="file" class="form-control-file" id="fileToUploadAutoFull" name="SequenceFile" aria-describedby="fileHelp">
-          <p id="msgAutoFull"></p>
-          <small id="fileHelp" class="form-text text-muted">Upload a third-generation sequencing (such as the PacBio RS II or Oxford Nanopore MinION) in FASTA format (2 GB limit).</small> </div>
-        <!--<hr />--> 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" id="AutoFullWorkflowSubmit">Submit</button>
-      </div>
+      <!-- /.modal-content --> 
     </div>
-    <!-- /.modal-content --> 
+    <!-- /.modal-dialog --> 
   </div>
-  <!-- /.modal-dialog --> 
-</div>
-<!-- /.modal --> 
-<!-- Dialog end --> 
+  <!-- /.modal --> 
+  <!-- Dialog end --> 
+  <!-- pseudo div - START -->
+  <input id="google_id" type="hidden" name="" value="<?php 
+if (isset($user->id)){
+    echo $_SESSION['google_id'];
+}?>">
+  <input id="google_name" type="hidden" name="" value="<?php 
+if (isset($user->id)){
+    echo $_SESSION['google_name'];
+}?>">
+  <input type="email" type="hidden" class="" id="OverviewEmail" aria-describedby="" value="<?php 
+if (isset($user->id)){
+echo $_SESSION['google_email'];
+}?>">
+  
+  <!--<input type="hidden" name="Language" value="English">--> 
+  <!-- pseudo div - END -->
+</form>
 
 <!-- Dialog start -->
 <div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoAssemblyFree">
@@ -657,9 +689,8 @@ small, .small {
           <label for="contigsFile">Select a sequence file</label>
           <input type="file" class="form-control-file" id="fileToUploadAutoFree" name="contigsFile" aria-describedby="fileHelp">
           <p id="msgAutoFree"></p>
-          <small id="fileHelp" class="form-text text-muted">Upload the genome assembly components (contigs, scaffolds, chromosomes) in FASTA format (10 MB limit).</small>
-        </div>
-        <!-- AssemblyFree - END -->
+          <small id="fileHelp" class="form-text text-muted">Upload the genome assembly components (contigs, scaffolds, chromosomes) in FASTA format (10 MB limit).</small> </div>
+        <!-- AssemblyFree - END --> 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

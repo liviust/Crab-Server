@@ -1,6 +1,108 @@
 jQuery(document).ready(function($){
 
-	$('#btnAutoFullWorkflow').on('click', function() {});
+	$('#btnAutoFullWorkflow').on('click', function() {
+		
+		var checkValue = $("#AnalysisTypeSelect").val();
+
+		$("#AutoFullWorkflowSubmitForm").submit(function(e){
+		
+			if($('#fileToUploadAutoFull').val() != "" && checkValue == "AutoFullWorkflow"){
+				
+					// get the file name, possibly with path (depends on browser)
+					var filename = $("#fileToUploadAutoFull").val();
+					
+					// Use a regular expression to trim everything before final dot
+					var extension = filename.replace(/^.*\./, '');			
+					var rawreads = filename.replace(/.*(\/|\\)/, '');
+					// trimming 			
+					var AssemblyPrefix = rawreads.replace(/(.*)\.(.*?)$/, "$1");
+					
+					// Iff there is no dot anywhere in filename, we would have extension == filename,
+					// so we account for this possibility now
+					if (extension == filename) {
+						extension = '';
+					} else {
+						// if there is an extension, we convert to lower case
+						// (N.B. this conversion will not effect the value of the extension
+						// on the file upload.)
+						extension = extension.toLowerCase();
+					}
+					
+					//alert(extension);
+					//alert(AssemblyPrefix);
+								
+					var fileExtension = ['fasta', 'fna', 'fa', 'fastq'];
+						
+					//alert (fileExtension[0]);
+					
+					if (extension != fileExtension[0] && extension != fileExtension[1] && extension != fileExtension[2] && extension != fileExtension[3]) {
+						alert("Invalid extension! Only fastq, fasta, fna, and fa formats are allowed.");
+						return false; 
+					}
+					
+					var hasSpace = AssemblyPrefix.indexOf(' ')>=0;			
+					if (hasSpace == true){
+						alert("Please check your fields for spaces.");
+						return false;
+					}
+					
+					//File uploaded successfully
+					//alert("File uploaded successfully!");
+					
+					var file_data = document.getElementById("fileToUploadAutoFull").files[0];
+					//var contig_data = document.getElementById("contigsFile").files[0];
+					
+					var Tech = $('input[name="autoradioTech"]:checked').val();			
+					var googleID = document.getElementById("google_id").value;
+					var Title = AssemblyPrefix;
+					var AssemblyPrefix = AssemblyPrefix;
+					var genomeSize = "5m";
+					var Email = document.getElementById("OverviewEmail").value;
+					var googleName = document.getElementById("google_name").value;
+					
+					var ncbi_cutoff = 0.00001;
+					var vfdb_cutoff = 0.00001;
+					var card_cutoff = 0.00001;
+					
+					var vfdb_threshold_id = "50%";
+					var vfdb_min_length = "60%";
+					var card_threshold_id = "50%";
+					var card_min_length = "60%";
+								
+					var form_data = new FormData();                
+					form_data.append('SequenceFile', file_data);
+					//form_data.append('contigsFile', contig_data);
+					form_data.append('Tech', Tech);
+					form_data.append('googleID', googleID);
+					form_data.append('Title', Title);
+					form_data.append('AssemblyPrefix', AssemblyPrefix);
+					form_data.append('genomeSize', genomeSize);
+					form_data.append('Email', Email);
+					form_data.append('googleName', googleName);
+					form_data.append('ncbi_cutoff', ncbi_cutoff);
+					form_data.append('vfdb_cutoff', vfdb_cutoff);
+					form_data.append('vfdb_threshold_id', vfdb_threshold_id);
+					form_data.append('vfdb_min_length', vfdb_min_length);
+					form_data.append('card_cutoff', card_cutoff);
+					form_data.append('card_threshold_id', card_threshold_id);
+					form_data.append('card_min_length', card_min_length);	
+					form_data.append('checkValue', checkValue);						
+					
+/*					var xhr = new XMLHttpRequest();
+					xhr.upload.addEventListener("progress", progressHandler, false);
+					xhr.addEventListener("load", completeHandler, false);
+					xhr.addEventListener("error", errorHandler, false);
+					xhr.addEventListener("abort", abortHandler, false);
+					xhr.open("POST", "upload.php");
+					xhr.send(form_data);*/					
+			
+			}else if($('#fileToUploadAutoFull').val() == "" && checkValue == "AutoFullWorkflow"){
+				alert("no file selected");
+				return false;
+			}
+		});
+	});
+
 	$('#btnAutoAssemblyFree').on('click', function() {});
 
 	$("#fileToUploadAutoFull").change(function() {	
@@ -49,7 +151,24 @@ jQuery(document).ready(function($){
 			}
 		}	
 	});
-		
+
+	function progressHandler(event){
+		document.getElementById("loaded_n_total").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
+		var percent = (event.loaded / event.total) * 100;
+		document.getElementById("progressBar").value = Math.round(percent);
+		document.getElementById("status").innerHTML = Math.round(percent)+"% uploaded... please wait";
+	}
+	function completeHandler(event){
+		document.getElementById("status").innerHTML = event.target.responseText;
+		document.getElementById("progressBar").value = 0;
+	}
+	function errorHandler(event){
+		document.getElementById("status").innerHTML = "Upload Failed";
+	}
+	function abortHandler(event){
+		document.getElementById("status").innerHTML = "Upload Aborted";
+	}	
+
     $('#AnalysisTypeSelect').change(function(){
 		var opt = $(this).val();
 		if(opt == 'FullWorkflow'){
