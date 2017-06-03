@@ -9,13 +9,13 @@ $( document ).ready(function() {
 	$('#SequenceFile').prop('disabled', true);	
 	
 	var checkValue = $("#AnalysisTypeSelect").val();
-	if (checkValue == "AssemblyFree" || checkValue == "AutoAssemblyFree" ) {
+	if (checkValue == "AssemblyFree") {
 		$('#SequenceFile').prop('disabled', true);
 	}	
 
 	// disable the button if the selection is changed:
 	$("#AnalysisTypeSelect").change(function () {
-		if ($(this).val() == "AssemblyFree" || $(this).val() == "AutoAssemblyFree") {
+		if ($(this).val() == "AssemblyFree") {
 			$('#SequenceFile').prop('disabled', true);
 			$('#contigsFile').prop('disabled', false);
 		} else {
@@ -37,7 +37,7 @@ var checkValue = $("#AnalysisTypeSelect").val();
 		if (checkValue == ""){
 			alert("Please select the type of analysis you would like.");
 			
-		}else if(($('#SequenceFile').val() != "" && checkValue == "FullWorkflow") || ($('#SequenceFile').val() != "" && checkValue == "AutoFullWorkflow")){
+		}else if(($('#SequenceFile').val() != "" && checkValue == "FullWorkflow")){
 			
 			$('#SequenceFile').prop('disabled', false);
 			
@@ -85,16 +85,6 @@ var checkValue = $("#AnalysisTypeSelect").val();
 				$("#s2").click();			
 				document.getElementById('s1').style.pointerEvents = 'auto';	
 				
-			}else if(checkValue == "AutoFullWorkflow"){
-				
-				$("#s6").click();			
-				document.getElementById('s1').style.pointerEvents = 'auto';
-				//document.getElementById('Title').focus();
-				$('#OverviewgenomeSize').attr("placeholder","5m");
-				$('#OverviewevalueParameters').attr("placeholder","-e 0.00001");
-				$('#OverviewVFDBevalueParameters').attr("placeholder","-e 0.00001");
-				$('#OverviewCARDevalueParameters').attr("placeholder","-e 0.00001");
-				
 			}
 			
 			//alert(AssemblyPrefix);
@@ -102,7 +92,7 @@ var checkValue = $("#AnalysisTypeSelect").val();
 			$('#OverviewAssemblyPrefix').attr("placeholder",AssemblyPrefix);							
 
 							
-		}else if(($('#SequenceFile').val() == "" && checkValue == "FullWorkflow") || ($('#SequenceFile').val() == "" && checkValue == "AutoFullWorkflow")){
+		}else if(($('#SequenceFile').val() == "" && checkValue == "FullWorkflow")){
 			// no file selected
 			alert("no file selected");
 		}else if (checkValue == "AssemblyFree"){
@@ -258,14 +248,25 @@ var checkValue = $("#AnalysisTypeSelect").val();
 			return false;
 		}else{
 			
-			var vfdb_evalue = $("#CARDevalueParameters").val();
-			$('#OverviewCARDevalueParameters').attr("placeholder",vfdb_evalue);
+			var RadeoButtonStatusCheck = $("input[name='radioTech']:checked").val();  // 1 or 0
+
+			if(RadeoButtonStatusCheck == 1){
+				$('#OverviewradioTech').attr("placeholder","-pacbio-raw");				
+/*				radiobtn = document.getElementById("Overviewpacbio-raw");
+				radiobtn.checked = 1;*/			
+			}else {
+				$('#OverviewradioTech').attr("placeholder","-nanopore-raw");
+/*				radiobtn = document.getElementById("Overviewnanopore-raw");
+				radiobtn.checked = 0;*/				
+			}
+			
+			var card_evalue = $("#CARDevalueParameters").val();
+			$('#OverviewCARDevalueParameters').attr("placeholder",card_evalue);
 			$("#s6").click();
 		}		
-		document.getElementById('s5').style.pointerEvents = 'auto';
-		
+		document.getElementById('s5').style.pointerEvents = 'auto';	
 
-		if(checkValue == "AssemblyFree" || checkValue == "AutoAssemblyFree"){
+		if(checkValue == "AssemblyFree"){
 			document.getElementById('switch1').style.display = "none";
 			document.getElementById('switch2').style.display = "block";
 			document.getElementById('switch3').style.display = "none";

@@ -12,10 +12,10 @@
 	/*
 	 * Configuration and setup Google API
 	 */
-	$client_id = ''; //Google client ID
-	$client_secret = ''; //Google client secret
+	$client_id = '888974174004-tfj3klejes1c8ghq5lam83opbgm11e77.apps.googleusercontent.com'; //Google client ID
+	$client_secret = 'd9TEZyfjEIucMb-Ej4xcUunp'; //Google client secret
 	$redirect_uri = 'http://bioinfo.cs.ccu.edu.tw/Crab/index.php'; //Callback URL
-	$api_key = '';
+	$api_key = 'AIzaSyDWffthbwZ4ZttbZsOZC-hYPttXpG4hH9w';
 
 	//Config
 	require_once('config/db_conn.php');
@@ -41,8 +41,8 @@
 	));
 	
 	## get refresh token from google api
-	//$client->setAccessType('offline');
-	//$client->setApprovalPrompt('force'); 
+	$client->setAccessType('offline');
+	$client->setApprovalPrompt('force'); 
 
 	//Send Client Request
 	$service = new Google_Service_Oauth2($client);
@@ -66,7 +66,7 @@
 	if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
 		
 		$client->setAccessToken($_SESSION['access_token']);		
-		echo '<pre>',print_r($_SESSION['access_token']),'</pre>';
+		//echo '<pre>',print_r($_SESSION['access_token']),'</pre>';
 		//echo $client->isAccessTokenExpired();
 		
 	} else {
@@ -74,11 +74,11 @@
 	}
 	
 	// Refresh the token if it's expired.
-	if($client->isAccessTokenExpired() && empty($_GET['logout'])) {
+/*	if($client->getAuth()->isAccessTokenExpired()) {
 		$authUrl = $client->createAuthUrl();
 		header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
 		exit;
-	}	
+	}*/	
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -123,9 +123,8 @@ small, .small {
 }*/
 </style>
 </head>
-<body>
-<!--<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
---><div class="container">
+<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
+<div class="container">
   <div class="page-header">
     <?php 
 		if(isset($authUrl)){ 
@@ -290,8 +289,9 @@ small, .small {
           <option value="" selected>-- Select analysis type --</option>
           <option value="FullWorkflow">Full Workflow</option>
           <option value="AssemblyFree">Assembly Free</option>
-          <option value="AutoFullWorkflow" disabled="disabled">Auto Full Workflow, For impatient people</option>
-          <option value="AutoAssemblyFree" disabled="disabled">Auto Assembly Free, For impatient people</option> 
+          <!--For impatient people-->
+          <option value="AutoFullWorkflow">Auto Full Workflow</option>
+          <option value="AutoAssemblyFree">Auto Assembly Free</option> 
         </select>
       </div>
       <div class="form-group">
@@ -316,7 +316,12 @@ small, .small {
         We will also notify you when your report is finished, and contact you if any problems arise.</small> </div>
       <?php
       if (isset($user->id)){
-		  echo("<button type='button' class='btn btn-primary' onclick='goToNextStep(2)'>Activate Step 2</button>");
+		  echo("<button id='initial_step' type='button' class='btn btn-primary' onclick='goToNextStep(2)'>Activate Step 2</button>");
+		  
+		  //Button trigger modal
+		  echo("<button id='btnAutoFullWorkflow' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoFullWorkflow' style='display: none;'>Activate</button>");
+		  echo("<button id='btnAutoAssemblyFree' type='button' class='btn btn-primary' data-toggle='modal' data-target='#ModalAutoAssemblyFree' style='display: none;'>Activate</button>");
+		  
 	  } else{
 		  echo("<button type='button' class='btn btn-info' onClick=\"alert('You must log in first.')\">Activate Step 2</button>");
 	  }	  
@@ -494,12 +499,14 @@ small, .small {
           <!--Oxford Nanopore Technology-->
           <div class="form-group">
             <label for="">Technology</label>
-            <label class="custom-control custom-radio">
-              <input id="Overviewpacbio-raw" name="radioTech" value="1" type="radio" class="custom-control-input" readonly>
+            <input type="text" class="form-control" id="OverviewradioTech" placeholder="" readonly>
+            
+<!--            <label class="custom-control custom-radio">
+              <input id="Overviewpacbio-raw" name="OverviewradioTech" value="1" type="radio" class="custom-control-input">
               <span class="custom-control-indicator"></span> <span class="custom-control-description">-pacbio-raw</span> </label>
             <label class="custom-control custom-radio">
-              <input id="Overviewnanopore-raw" name="radioTech" value="0" type="radio" class="custom-control-input" readonly>
-              <span class="custom-control-indicator"></span> <span class="custom-control-description">-nanopore-raw</span> </label>
+              <input id="Overviewnanopore-raw" name="OverviewradioTech" value="0" type="radio" class="custom-control-input">
+              <span class="custom-control-indicator"></span> <span class="custom-control-description">-nanopore-raw</span> </label>-->
           </div>
           <!--/Oxford Nanopore Technology--> 
 <div class="form-group">
@@ -607,11 +614,47 @@ small, .small {
 </footer>
 <!-- footer end --> 
 
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoFullWorkflow">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Auto Full Workflow</h4>
+      </div>
+      <div class="modal-body">
+        <p>For impatient people&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoAssemblyFree">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Auto Assembly Free</h4>
+      </div>
+      <div class="modal-body">
+        <p>For impatient people&hellip;</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script> 
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src="js/activeStep.js"></script> 
 <script type="text/javascript" src="js/getFileSize.js"></script> 
 <script type="text/javascript" src="js/getContigSize.js"></script> 
 <script type="text/javascript" src="js/goToNextStep.js"></script>
+<script type="text/javascript" src="js/goToAutoStep.js"></script>
 </body>
 </html>
