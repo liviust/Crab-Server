@@ -5,8 +5,17 @@ jQuery(document).ready(function($){
 		var checkValue = $("#AnalysisTypeSelect").val();
 
 		$("#AutoFullWorkflowSubmitForm").submit(function(e){
-		
-			if($('#fileToUploadAutoFull').val() != "" && checkValue == "AutoFullWorkflow"){
+
+			// Check if third radio is selected (by name and value)
+/*			if ($('input[name=autoradioTech][value=1]:checked').length == 1){
+				alert("-pacbio-raw");
+			}*/
+			
+			// Check if something in radio group is choosen
+			if ($('input[name=autoradioTech]:checked').length <= 0){
+				alert("Please select your Technology.");
+				return false;
+			}else if($('#fileToUploadAutoFull').val() != "" && checkValue == "AutoFullWorkflow"){
 				
 					// get the file name, possibly with path (depends on browser)
 					var filename = $("#fileToUploadAutoFull").val();
@@ -56,7 +65,7 @@ jQuery(document).ready(function($){
 					var googleID = document.getElementById("google_id").value;
 					var Title = AssemblyPrefix;
 					var AssemblyPrefix = AssemblyPrefix;
-					var genomeSize = "5m";
+					var genomeSize = "5.5m";
 					var Email = document.getElementById("OverviewEmail").value;
 					var googleName = document.getElementById("google_name").value;
 					
@@ -88,18 +97,19 @@ jQuery(document).ready(function($){
 					form_data.append('card_min_length', card_min_length);	
 					form_data.append('checkValue', checkValue);						
 					
-/*					var xhr = new XMLHttpRequest();
+					var xhr = new XMLHttpRequest();
 					xhr.upload.addEventListener("progress", progressHandler, false);
 					xhr.addEventListener("load", completeHandler, false);
 					xhr.addEventListener("error", errorHandler, false);
 					xhr.addEventListener("abort", abortHandler, false);
 					xhr.open("POST", "upload.php");
-					xhr.send(form_data);*/					
+					xhr.send(form_data);					
 			
 			}else if($('#fileToUploadAutoFull').val() == "" && checkValue == "AutoFullWorkflow"){
 				alert("no file selected");
 				return false;
-			}
+			}		
+			
 		});
 	});
 
@@ -153,20 +163,20 @@ jQuery(document).ready(function($){
 	});
 
 	function progressHandler(event){
-		document.getElementById("loaded_n_total").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
+		document.getElementById("loaded_n_total_AFW").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
 		var percent = (event.loaded / event.total) * 100;
-		document.getElementById("progressBar").value = Math.round(percent);
-		document.getElementById("status").innerHTML = Math.round(percent)+"% uploaded... please wait";
+		document.getElementById("progressBar_AFW").value = Math.round(percent);
+		document.getElementById("status_AFW").innerHTML = Math.round(percent)+"% uploaded... please wait";
 	}
 	function completeHandler(event){
-		document.getElementById("status").innerHTML = event.target.responseText;
-		document.getElementById("progressBar").value = 0;
+		document.getElementById("status_AFW").innerHTML = event.target.responseText;
+		document.getElementById("progressBar_AFW").value = 0;
 	}
 	function errorHandler(event){
-		document.getElementById("status").innerHTML = "Upload Failed";
+		document.getElementById("status_AFW").innerHTML = "Upload Failed";
 	}
 	function abortHandler(event){
-		document.getElementById("status").innerHTML = "Upload Aborted";
+		document.getElementById("status_AFW").innerHTML = "Upload Aborted";
 	}	
 
     $('#AnalysisTypeSelect').change(function(){

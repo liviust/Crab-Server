@@ -81,8 +81,26 @@
 						echo "Oops! Something went wrong!";
 					}				
 					
-				} else {
-					echo "-bash: kill: ($process_id) - Operation not permitted";
+				} else { //Program Crash
+					//echo "-bash: kill: ($process_id) - Operation not permitted";
+					
+					//delete
+					$bulk = new MongoDB\Driver\BulkWrite;
+					$bulk->delete(['job_id' => $job_id], ['limit' => 1]);		
+					$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY, 1000);
+					$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);		
+		
+					//print_r($filter);	
+					
+					$dirPath = '/bip7_disk/WWW/WWW/www/Crab/uploads/'.$user_id.'/'.$job_id;			
+					system('rm -rf ' . escapeshellarg($dirPath), $retval);
+					
+					if($retval == 0){
+						// UNIX commands return zero on success
+						echo "Your job has been deleted successfully!";
+					}else{
+						echo "Oops! Something went wrong!";
+					}
 				}
 			}else{ //Done
 

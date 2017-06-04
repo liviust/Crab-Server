@@ -277,15 +277,112 @@
 			}
 		//}
 		
-		// Monitor Job
-/*		while(!file_exists('/proc/'.$pid[0])){
-			
-			//Auto Mail Sender (2)
-			mkdir('uploads/123', 0755, true);
-			//require_once ('done.php');
-			break;
-		}*/
 		
-	}	
+	}else if($checkValue == 'AutoFullWorkflow'){
+		
+		$target_file3 = $filename . '/' . basename($_FILES["SequenceFile"]["name"]);
+
+		if ( 0 < $_FILES['SequenceFile']['error'] ) {
+			echo 'Error: ' . $_FILES['SequenceFile']['error'];
+		}
+		else {
+			move_uploaded_file($_FILES['SequenceFile']['tmp_name'], $target_file3);
+			echo "The file ". basename( $_FILES["SequenceFile"]["name"]). " has been uploaded.";
+			
+			// Construct a write concern
+			$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
+			
+			// Create a bulk write object and add our insert operation
+			$bulk = new MongoDB\Driver\BulkWrite();		
+			
+			$bulk->insert(['user_id' => $_POST['googleID'], 'job_id' => $job_id, 'process_id' => '', 'title' => $_POST['Title'], 'submitted' => date("Y-m-d H:i:s"), 'finished' => '', 'status' => 'Queued', 'status_code' => 1, 'types_of_analysis' => 3]);
+			
+			try {
+			
+			//Execute one or more write operations
+			$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);
+			
+			} catch (MongoDB\Driver\Exception\Exception $e) {
+			
+			//handle the exception
+			echo $e->getMessage(), "\n";
+			}		
+			
+			//gnuplot 5.0 patchlevel 5
+			$gnuplot_path = '/usr/bin/gnuplot';
+			
+			if($Assembling == 1){ //Assembling PacBio data				
+				
+				//$command = 'nohup time /bip7_disk/WWW/WWW/www/Crab/Model/canu/Linux-amd64/bin/canu -d '.$filename.'/ -p '.$AssemblyPrefix.' gnuplot='.$gnuplot_path.' genomeSize=4.8m useGrid=false maxThreads=10 -pacbio-raw '.$target_file.' > '.$filename.'/process.err 2>&1';
+				$command = 'nohup time ./Model/programs/full.sh '.$filename.' '.$AssemblyPrefix.' -pacbio-raw '.$target_file3.' '.$ncbi_cutoff.' '.$genomeSize.' '.$vfdb_cutoff.' '.$vfdb_threshold_id.' '.$vfdb_min_length.' '.$card_cutoff.' '.$card_threshold_id.' '.$card_min_length.' '.$_POST['googleID'].' '.$job_id.' '.$Email.' '.$googleName.' > '.$filename.'/jobLog.err 2>&1';
+				$command .= ' & echo $!';
+			
+			}else{ // Assembling Oxford Nanopore data	
+						 
+				//$command = 'nohup time /bip7_disk/WWW/WWW/www/Crab/Model/canu/Linux-amd64/bin/canu -d '.$filename.'/ -p '.$AssemblyPrefix.' gnuplot='.$gnuplot_path.' genomeSize=4.8m useGrid=false maxThreads=10 -nanopore-raw '.$target_file.' > '.$filename.'/process.err 2>&1';
+				$command = 'nohup time ./Model/programs/full.sh '.$filename.' '.$AssemblyPrefix.' -nanopore-raw '.$target_file3.' '.$ncbi_cutoff.' '.$genomeSize.' '.$vfdb_cutoff.' '.$vfdb_threshold_id.' '.$vfdb_min_length.' '.$card_cutoff.' '.$card_threshold_id.' '.$card_min_length.' '.$_POST['googleID'].' '.$job_id.' '.$Email.' '.$googleName.' > '.$filename.'/jobLog.err 2>&1';
+				$command .= ' & echo $!';
+			}
+
+			exec($command, $pid, $return_var);
+			
+			if(!empty($pid))
+			{			
+					
+				//require_once ('started.php');
+					
+				$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
+					
+				//Update status			
+				$filter = ['job_id' => $job_id];
+				$newObj = ['$set' => ['status' => 'Running', 'process_id' => $pid[0], 'status_code' => 0]];
+				$options = ["multi" => false, "upsert" => false];		
+				$bulk = new MongoDB\Driver\BulkWrite;
+				$bulk->update($filter, $newObj, $options);			
+				
+				try {
+					
+					$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);
+					
+				} catch (MongoDB\Driver\Exception\Exception $e) {
+					
+					echo $e->getMessage(), "\n";
+				}				
+			}
+			
+			$monitor = 'kill -s 0 '.$pid[0].' 1>/dev/null 2>&1; echo $?';
+			
+			//echo $monitor; 
+			
+			exec($monitor, $output, $return_var);
+			
+			if(!empty($pid))
+			{
+				if($output[0]==1)
+				{
+					
+					//require_once ('done.php');
+					 
+					$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
+						
+					//Update status			
+					$filter = ['job_id' => $job_id];
+					$newObj = ['$set' => ['status' => 'DONE', 'process_id' => $pid[0], 'status_code' => 1]];
+					$options = ["multi" => false, "upsert" => false];		
+					$bulk = new MongoDB\Driver\BulkWrite;
+					$bulk->update($filter, $newObj, $options);			
+					
+					try {
+						
+						$result = $manager->executeBulkWrite($dbname.'.'.$collection, $bulk, $wc);
+						
+					} catch (MongoDB\Driver\Exception\Exception $e) {
+						
+						echo $e->getMessage(), "\n";
+					}
+				} 
+			}
+		}		
+	}else if($checkValue == 'AutoAssemblyFree'){}	
 ?>
 

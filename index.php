@@ -623,7 +623,7 @@ small, .small {
           <h4 class="modal-title">Auto Full Workflow</h4>
         </div>
         <div class="modal-body">
-          <p>This list describes the settings available and their default setting:</p>
+          <p>This list describes the settings available and their <span style="font-style:normal; color:#F00">default setting</span>:</p>
           <div class="form-group">
             <label for="">Technology</label>
             <label class="custom-control custom-radio">
@@ -638,12 +638,18 @@ small, .small {
             <input type="file" class="form-control-file" id="fileToUploadAutoFull" name="SequenceFile" aria-describedby="fileHelp">
             <p id="msgAutoFull"></p>
             <small id="fileHelp" class="form-text text-muted">Upload a third-generation sequencing (such as the PacBio RS II or Oxford Nanopore MinION) in FASTA format (2 GB limit).</small> </div>
+          <!-- Progress Bar -->
           <div class="form-group">
-            <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
-            <h3 id="status"></h3>
-            <p id="loaded_n_total"></p>
+            <progress id="progressBar_AFW" value="0" max="100" style="width:300px;"></progress>
+            <h3 id="status_AFW"></h3>
+            <p id="loaded_n_total_AFW"></p>
           </div>
-          <!--<hr /> --> 
+          <!-- /.Progress Bar -->
+          <hr />
+          <h4>Selected %ID threshold: <span style="font-style:italic; color:#999">50%</span></h4>
+          <h4>Selected minimum length: <span style="font-style:italic; color:#999">60%</span></h4>
+          <h4>E-value cut-off: <span style="font-style:italic; color:#999">1e-5</span></h4>
+          <h4>Estimate genome size: <span style="font-style:italic; color:#999">5.5M</span></h4>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -665,7 +671,7 @@ if (isset($user->id)){
 if (isset($user->id)){
     echo $_SESSION['google_name'];
 }?>">
-  <input type="email" type="hidden" class="" id="OverviewEmail" aria-describedby="" value="<?php 
+  <input type="hidden" class="" id="OverviewEmail" aria-describedby="emailHelp" value="<?php 
 if (isset($user->id)){
 echo $_SESSION['google_email'];
 }?>">
