@@ -12,10 +12,10 @@
 	/*
 	 * Configuration and setup Google API
 	 */
-	$client_id = ''; //Google client ID
-	$client_secret = ''; //Google client secret
+	$client_id = '888974174004-tfj3klejes1c8ghq5lam83opbgm11e77.apps.googleusercontent.com'; //Google client ID
+	$client_secret = 'd9TEZyfjEIucMb-Ej4xcUunp'; //Google client secret
 	$redirect_uri = 'http://bioinfo.cs.ccu.edu.tw/Crab/index.php'; //Callback URL
-	$api_key = '';
+	$api_key = 'AIzaSyDWffthbwZ4ZttbZsOZC-hYPttXpG4hH9w';
 
 	//Config
 	require_once('config/db_conn.php');

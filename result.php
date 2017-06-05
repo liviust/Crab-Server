@@ -231,16 +231,16 @@ pre {
 		$AMR_blast_directory = 'http://bioinfo.cs.ccu.edu.tw/Crab/uploads/'.$_SESSION['google_id'].'/'.$JobCode.'/card-reports/CARD-blast-results.csv';
 		$species_blast_directory = 'http://bioinfo.cs.ccu.edu.tw/Crab/uploads/'.$_SESSION['google_id'].'/'.$JobCode.'/ncbi-reports/ncbi_top5_species.csv';
 
-		// Full Workflow
-		if($document->types_of_analysis == 1){
+		// (Auto) Full Workflow
+		if($document->types_of_analysis == 1 || $document->types_of_analysis == 3){
 			foreach (glob('/bip7_disk/WWW/WWW/www/Crab/uploads/'.$_SESSION['google_id'].'/'.$JobCode.'/*.contigs.fasta') as $rawfilename) {
 				//echo $rawfilename ."<br />";
 			}		
 			if($rawfilename != ''){
 				$path_parts = pathinfo($rawfilename);
 			}			
-		}else{
-			// Assembly Free
+		}else if($document->types_of_analysis == 2 || $document->types_of_analysis == 4){
+			// (Auto) Assembly Free
 			foreach (glob('/bip7_disk/WWW/WWW/www/Crab/uploads/'.$_SESSION['google_id'].'/'.$JobCode.'/*.f*') as $contigsfilename) {
 				//echo $contigsfilename ."<br />";
 			}			
@@ -279,7 +279,7 @@ pre {
       <h3><strong>Input Files:&nbsp;<i class="grey">
         <?php 
 		if($rawfilename != ''){ 
-			echo $path_parts['basename']; 
+			echo $path_parts['basename']; // //oxford.contigs.fasta
 		}else if($contigsfilename != ''){
 			echo $path_parts['filename'];
 		}

@@ -646,10 +646,10 @@ small, .small {
           </div>
           <!-- /.Progress Bar -->
           <hr />
+          <h4>Estimate genome size: <span style="font-style:italic; color:#999">5.5M</span></h4>
+          <h4>E-value cut-off: <span style="font-style:italic; color:#999">1e-5</span></h4>          
           <h4>Selected %ID threshold: <span style="font-style:italic; color:#999">50%</span></h4>
           <h4>Selected minimum length: <span style="font-style:italic; color:#999">60%</span></h4>
-          <h4>E-value cut-off: <span style="font-style:italic; color:#999">1e-5</span></h4>
-          <h4>Estimate genome size: <span style="font-style:italic; color:#999">5.5M</span></h4>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -681,35 +681,63 @@ echo $_SESSION['google_email'];
 </form>
 
 <!-- Dialog start -->
-<div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoAssemblyFree">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Auto Assembly Free</h4>
+<form id="AutoAssemblyFreeSubmitForm" enctype="multipart/form-data" method="post" action="">
+  <div class="modal fade" tabindex="-1" role="dialog" id="ModalAutoAssemblyFree">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Auto Assembly Free</h4>
+        </div>
+        <div class="modal-body">
+          <p>This list describes the settings available and their <span style="font-style:normal; color:#F00">default setting</span>:</p>
+          <!-- AssemblyFree - START -->
+          <div class="form-group">
+            <label for="contigsFile">Select a sequence file</label>
+            <input type="file" class="form-control-file" id="fileToUploadAutoFree" name="contigsFile" aria-describedby="fileHelp">
+            <p id="msgAutoFree"></p>
+            <small id="fileHelp" class="form-text text-muted">Upload the genome assembly components (contigs, scaffolds, chromosomes) in FASTA format (10 MB limit).</small> </div>
+          <!-- AssemblyFree - END --> 
+          <!-- Progress Bar -->
+          <div class="form-group">
+            <progress id="progressBar_AAF" value="0" max="100" style="width:300px;"></progress>
+            <h3 id="status_AAF"></h3>
+            <p id="loaded_n_total_AAF"></p>
+          </div>
+          <!-- /.Progress Bar -->
+          <hr />
+          <h4>E-value cut-off: <span style="font-style:italic; color:#999">1e-5</span></h4>          
+          <h4>Selected %ID threshold: <span style="font-style:italic; color:#999">50%</span></h4>
+          <h4>Selected minimum length: <span style="font-style:italic; color:#999">60%</span></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="AutoAssemblyFreeSubmit">Submit</button>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>This list describes the settings available and their default setting:</p>
-        <!-- AssemblyFree - START -->
-        <div class="form-group">
-          <label for="contigsFile">Select a sequence file</label>
-          <input type="file" class="form-control-file" id="fileToUploadAutoFree" name="contigsFile" aria-describedby="fileHelp">
-          <p id="msgAutoFree"></p>
-          <small id="fileHelp" class="form-text text-muted">Upload the genome assembly components (contigs, scaffolds, chromosomes) in FASTA format (10 MB limit).</small> </div>
-        <!-- AssemblyFree - END --> 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" id="AutoFullAssemblyFreeSubmit">Submit</button>
-      </div>
+      <!-- /.modal-content --> 
     </div>
-    <!-- /.modal-content --> 
+    <!-- /.modal-dialog --> 
   </div>
-  <!-- /.modal-dialog --> 
-</div>
-<!-- /.modal --> 
-<!-- Dialog end --> 
-
+  <!-- /.modal --> 
+  <!-- Dialog end --> 
+  <!-- pseudo div - START -->
+  <input id="google_id" type="hidden" name="" value="<?php 
+if (isset($user->id)){
+    echo $_SESSION['google_id'];
+}?>">
+  <input id="google_name" type="hidden" name="" value="<?php 
+if (isset($user->id)){
+    echo $_SESSION['google_name'];
+}?>">
+  <input type="hidden" class="" id="OverviewEmail" aria-describedby="emailHelp" value="<?php 
+if (isset($user->id)){
+echo $_SESSION['google_email'];
+}?>">
+  
+  <!--<input type="hidden" name="Language" value="English">--> 
+  <!-- pseudo div - END -->
+</form>
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script> 
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script> 
 <script type="text/javascript" src="js/activeStep.js"></script> 

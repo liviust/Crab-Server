@@ -64,7 +64,7 @@ jQuery(document).ready(function($){
 					var Tech = $('input[name="autoradioTech"]:checked').val();			
 					var googleID = document.getElementById("google_id").value;
 					var Title = AssemblyPrefix;
-					var AssemblyPrefix = AssemblyPrefix;
+					var _AssemblyPrefix = AssemblyPrefix;
 					var genomeSize = "5.5m";
 					var Email = document.getElementById("OverviewEmail").value;
 					var googleName = document.getElementById("google_name").value;
@@ -73,10 +73,10 @@ jQuery(document).ready(function($){
 					var vfdb_cutoff = 0.00001;
 					var card_cutoff = 0.00001;
 					
-					var vfdb_threshold_id = "50%";
-					var vfdb_min_length = "60%";
-					var card_threshold_id = "50%";
-					var card_min_length = "60%";
+					var vfdb_threshold_id = 50;
+					var vfdb_min_length = 60;
+					var card_threshold_id = 50;
+					var card_min_length = 60;
 								
 					var form_data = new FormData();                
 					form_data.append('SequenceFile', file_data);
@@ -84,7 +84,7 @@ jQuery(document).ready(function($){
 					form_data.append('Tech', Tech);
 					form_data.append('googleID', googleID);
 					form_data.append('Title', Title);
-					form_data.append('AssemblyPrefix', AssemblyPrefix);
+					form_data.append('AssemblyPrefix', _AssemblyPrefix);
 					form_data.append('genomeSize', genomeSize);
 					form_data.append('Email', Email);
 					form_data.append('googleName', googleName);
@@ -113,7 +113,113 @@ jQuery(document).ready(function($){
 		});
 	});
 
-	$('#btnAutoAssemblyFree').on('click', function() {});
+	$('#btnAutoAssemblyFree').on('click', function() {
+
+		var checkValue = $("#AnalysisTypeSelect").val();
+
+		$("#AutoAssemblyFreeSubmitForm").submit(function(e){
+
+			var str = $("#evalueParameters").val();
+			var regexp = /^[0-9]+([,.][0-9]+)?$/g;
+			var chk = regexp.test(str);
+			
+			if(checkValue == "AutoAssemblyFree"){
+				if($('#fileToUploadAutoFree').val() == ""){
+					alert("no file selected");
+					return false;
+				}else if($('#fileToUploadAutoFree').val() != ""){
+	
+					// get the file name, possibly with path (depends on browser)
+					var filename = $("#fileToUploadAutoFree").val();
+					
+					// Use a regular expression to trim everything before final dot
+					var extension = filename.replace(/^.*\./, '');			
+					var contigs = filename.replace(/.*(\/|\\)/, '');
+					// trimming 			
+					var contigsPrefix = contigs.replace(/(.*)\.(.*?)$/, "$1");
+					
+					//alert(contigs); //VGH107.fasta
+								
+					if (extension == filename) {
+						extension = '';
+					} else {
+						extension = extension.toLowerCase();
+					}
+								
+					var fileExtension = ['fasta', 'fna', 'fa'];
+						
+					//alert (fileExtension[0]);
+	
+					var hasSpace = contigsPrefix.indexOf(' ')>=0;
+					
+					if (extension != fileExtension[0] && extension != fileExtension[1] && extension != fileExtension[2]) {
+						alert("Invalid extension! Only fasta, fna, and fa formats are allowed.");
+						return false; 
+					}else if (hasSpace == true){
+						alert("Please check your fields for spaces.");
+						return false;
+					}	
+
+					//File uploaded successfully
+					//alert("File uploaded successfully!");
+
+					//var file_data = document.getElementById("fileToUploadAutoFull").files[0];
+					var contig_data = document.getElementById("fileToUploadAutoFree").files[0];
+					
+					var Tech = $('input[name="autoradioTech"]:checked').val();			
+					var googleID = document.getElementById("google_id").value;
+					var Title = contigsPrefix;
+					
+					var _AssemblyPrefix = contigsPrefix;
+					var genomeSize = "5.5m";
+					var Email = document.getElementById("OverviewEmail").value;
+					var googleName = document.getElementById("google_name").value;
+					
+					var ncbi_cutoff = 0.00001;
+					var vfdb_cutoff = 0.00001;
+					var card_cutoff = 0.00001;
+					
+					var vfdb_threshold_id = 50;
+					var vfdb_min_length = 60;
+					var card_threshold_id = 50;
+					var card_min_length = 60;
+								
+					var form_data = new FormData();                
+					//form_data.append('SequenceFile', file_data);
+					form_data.append('contigsFile', contig_data);
+					form_data.append('Tech', Tech); //undefined 
+					form_data.append('googleID', googleID);
+					form_data.append('Title', contigsPrefix);
+					form_data.append('AssemblyPrefix', _AssemblyPrefix);
+					form_data.append('genomeSize', genomeSize);
+					form_data.append('Email', Email);
+					form_data.append('googleName', googleName);
+					form_data.append('ncbi_cutoff', ncbi_cutoff);
+					form_data.append('vfdb_cutoff', vfdb_cutoff);
+					form_data.append('vfdb_threshold_id', vfdb_threshold_id);
+					form_data.append('vfdb_min_length', vfdb_min_length);
+					form_data.append('card_cutoff', card_cutoff);
+					form_data.append('card_threshold_id', card_threshold_id);
+					form_data.append('card_min_length', card_min_length);	
+					form_data.append('checkValue', checkValue);						
+					
+					var xhr = new XMLHttpRequest();
+					xhr.upload.addEventListener("progress", progressHandler, false);
+					xhr.addEventListener("load", completeHandler, false);
+					xhr.addEventListener("error", errorHandler, false);
+					xhr.addEventListener("abort", abortHandler, false);
+					xhr.open("POST", "upload.php");
+					xhr.send(form_data);		
+
+	
+				}else if($('#fileToUploadAutoFree').val() == "" && checkValue == "AutoAssemblyFree"){
+					alert("no file selected");
+					return false;
+				}		
+			}
+		});		
+		
+	});
 
 	$("#fileToUploadAutoFull").change(function() {	
 		var sizeLimit = 2;
@@ -167,16 +273,27 @@ jQuery(document).ready(function($){
 		var percent = (event.loaded / event.total) * 100;
 		document.getElementById("progressBar_AFW").value = Math.round(percent);
 		document.getElementById("status_AFW").innerHTML = Math.round(percent)+"% uploaded... please wait";
+		
+		document.getElementById("loaded_n_total_AAF").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
+		var percent = (event.loaded / event.total) * 100;
+		document.getElementById("progressBar_AAF").value = Math.round(percent);
+		document.getElementById("status_AAF").innerHTML = Math.round(percent)+"% uploaded... please wait";		
+		
 	}
 	function completeHandler(event){
 		document.getElementById("status_AFW").innerHTML = event.target.responseText;
 		document.getElementById("progressBar_AFW").value = 0;
+		
+		document.getElementById("status_AAF").innerHTML = event.target.responseText;
+		document.getElementById("progressBar_AAF").value = 0;		
 	}
 	function errorHandler(event){
 		document.getElementById("status_AFW").innerHTML = "Upload Failed";
+		document.getElementById("status_AAF").innerHTML = "Upload Failed";
 	}
 	function abortHandler(event){
 		document.getElementById("status_AFW").innerHTML = "Upload Aborted";
+		document.getElementById("status_AAF").innerHTML = "Upload Aborted";
 	}	
 
     $('#AnalysisTypeSelect').change(function(){
