@@ -125,8 +125,8 @@
 	?>
     </h1>
   </div>
-<!--  <button id="btnDelete" type="button" name="remove_levels" class="btn btn-danger" disabled="disabled"><span class="glyphicon glyphicon-trash"></span> Delete selected row</button><br /><br />
--->  <table id="tableJobs" class="table table-striped table-bordered display table-hover" style="cursor:pointer" cellspacing="0" width="100%">
+  <button id="btnDelete" type="button" name="remove_levels" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete selected row</button><br /><br />
+  <table id="tableJobs" class="table table-striped table-bordered display table-hover" style="cursor:pointer" cellspacing="0" width="100%">
   </table>
   
 <!-- footer start -->
@@ -163,7 +163,7 @@ $(document).ready(function(){
                 {"mDataProp":"Submitted On","sTitle":"Submitted On","sType":"date"},
 				{"mDataProp":"Finish Time","sTitle":"Finish Time","sType":"date"},
 				{"mDataProp":"Status","sTitle":"Status","sType":"string"},
-				{"mDataProp":"Delete","sTitle":'<span class="glyphicon glyphicon-trash"></span>',"sDefaultContent":'<a class="delete">Delete</a>',"sType":"string"}
+				//{"mDataProp":"Delete","sTitle":'<span class="glyphicon glyphicon-trash"></span>',"sDefaultContent":'<a class="delete">Delete</a>',"sType":"string"}
 			],
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 				$('td:eq(0)', nRow).html('<a href="http://bioinfo.cs.ccu.edu.tw/Crab/result.php?jobid=' + aData.Submission + '">' + aData.Submission + '</a>');
@@ -188,12 +188,14 @@ $(document).ready(function(){
 		
 		<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?>
 
-		$('.delete').click(function() {
+/*		$('.delete').click(function() {
 			
 			oTable.on('click','tr',function() {
 
 			var row = oTable.fnGetData(this);		
 			console.log(row);
+			
+				bootbox.hideAll(); //to hide any other bootboxes right before showing the bootbox 
 			
 				bootbox.confirm("Are you sure you want to delete this job?", function(result) {
 					
@@ -220,15 +222,17 @@ $(document).ready(function(){
 			return false;
 			
 			});
-		});	
+		});	*/
 
 		
-/*		oTable.on('click','tr',function() {
+		oTable.on('click','tr',function() {
 			
 			var row = oTable.fnGetData(this);		
 			console.log(row);	
 			
-			$('#btnDelete').click( function () {			
+			$('#btnDelete').click( function () {	
+			
+				bootbox.hideAll();		
 				
 				bootbox.confirm("Are you sure you want to delete this job?", function(result) {
 					
@@ -250,7 +254,7 @@ $(document).ready(function(){
 					}								  
 				});				
 			});
-		});*/
+		});
 
 /*		oTable.on('click','tr',function() {	
 			var row = oTable.fnGetData(this);
