@@ -13,7 +13,7 @@
 	$mail->CharSet = "UTF-8"; //設定郵件編碼        
 	
 	$mail->Username = "noreply@imyes.net"; //設定驗證帳號        
-	$mail->Password = ""; //設定驗證密碼
+	$mail->Password = "cc246810"; //設定驗證密
 	$mail->SetFrom('noreply@imyes.net', 'Cяab Server');
 	
 	$mail->Subject = $title; //設定郵件標題

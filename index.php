@@ -1,6 +1,13 @@
 <?php
 	if (session_status() == PHP_SESSION_NONE) {
-	  session_start();
+	  //session_save_path("5;/tmp"); 
+	//session_save_path('/var/lib/php/session');
+	
+	//session_save_path('/tmp');
+	
+	//ini_set('session.gc_probability', 1);
+	session_start();
+
 	}
 	
 	//Include Google client library 
@@ -82,7 +89,7 @@
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"><!--<!DOCTYPE html>-->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -123,15 +130,53 @@ small, .small {
 }*/
 </style>
 </head>
-<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
-<div class="container">
-  <div class="page-header">
+<body>
+<!--<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
+--><div class="container">
+  <div class="page-header">  
+  
+ <!-- Dialog start -->
+<form id="SignInForm" enctype="multipart/form-data" method="post" action="" autocomplete="off">
+  <div class="modal fade" tabindex="-1" role="dialog" id="loginForm">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Log in to your account</h4>
+        </div>
+        <div class="modal-body">
+          <p>Don’t have an account? <a href="signup.php" target="_blank" style="text-decoration: underline;">Sign up</a></p>
+            <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="nope" required="required">
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            </div>
+            <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" autocomplete="new-password" required="required">
+            </div>
+          <!--<hr />-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" id="">Sign</button>
+        </div>
+      </div>
+      <!-- /.modal-content --> 
+    </div>
+    <!-- /.modal-dialog --> 
+  </div>
+  <!-- /.modal --> 
+  <!-- Dialog end -->
+</form>
     <?php 
 		if(isset($authUrl)){ 
 			//show Log in
 			echo '<div style="text-align:right">';
-			echo '<a class="login" href="' . $authUrl . '"><span class="glyphicon glyphicon-log-in"></span> Log in</a>';
-			echo '</div>';
+			echo '<a class="login" href="" data-toggle="modal" data-target="#loginForm"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign in</a>';
+			echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
+			echo '<a class="login" href="' . $authUrl . '"><span class="fa fa-google"></span>&nbsp;Google Login</a>';
+			echo '</div>';			
 		}else {
 			//get user info 
 			$user = $service->userinfo->get(); 
@@ -608,7 +653,7 @@ small, .small {
 <footer class="footer">
   <div class="container">
     <hr />
-    <p class="text-muted">Copyright © <script>document.write(new Date().getFullYear())</script><a target="_blank" href="http://bioinfo.cs.ccu.edu.tw/bioinfo/">Bioinformatics Lab</a>. All Rights Reserved.</p>
+    <p class="text-muted">Copyright © <script>document.write(new Date().getFullYear())</script>&nbsp;<a target="_blank" href="http://bioinfo.cs.ccu.edu.tw/bioinfo/">Bioinformatics Lab</a>. All Rights Reserved.</p>
   </div>
 </footer>
 <!-- footer end --> 

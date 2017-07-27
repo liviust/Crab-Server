@@ -413,7 +413,7 @@
 			echo $e->getMessage(), "\n";
 		}
 
-			$command = 'nohup time ./Model/programs/free.sh '.$filename.' '.$ncbi_cutoff.' '.$vfdb_cutoff.' '.$vfdb_threshold_id.' '.$vfdb_min_length.' '.$card_cutoff.' '.$card_threshold_id.' '.$card_min_length.' '.$_POST['googleID'].' '.$job_id.' '.$Email.' '.$googleName.' > '.$filename.'/jobLog.err 2>&1';
+			$command = 'nohup time ./Model/programs/free_tmp.sh '.$filename.' '.$ncbi_cutoff.' '.$vfdb_cutoff.' '.$vfdb_threshold_id.' '.$vfdb_min_length.' '.$card_cutoff.' '.$card_threshold_id.' '.$card_min_length.' '.$_POST['googleID'].' '.$job_id.' '.$Email.' '.$googleName.' > '.$filename.'/jobLog.err 2>&1';
 			$command .= ' & echo $!';
 			
 			exec($command, $pid, $return_var);
@@ -424,7 +424,7 @@
 			if(file_exists('/proc/'.$pid[0]) && $output[0] == 0){
 		
 				//Auto Mail Sender
-				//require_once ('started.php');
+				require_once ('started.php');
 		
 				$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
 					

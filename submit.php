@@ -22,6 +22,8 @@
 
 	// Construct a query with filter
 	$filter = ['user_id' => $_SESSION['google_id']];
+	
+	//$filter = ['user_id' => '117555268755893720105'];
 	$query = new MongoDB\Driver\Query($filter);
 	
 	try {

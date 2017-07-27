@@ -40,12 +40,12 @@ jQuery(document).ready(function($){
 					//alert(extension);
 					//alert(AssemblyPrefix);
 								
-					var fileExtension = ['fasta', 'fna', 'fa', 'fastq'];
+					var fileExtension = ['fasta', 'fna', 'fa', 'fastq', 'gz'];
 						
-					//alert (fileExtension[0]);
+					//alert (fileExtension[4]);
 					
-					if (extension != fileExtension[0] && extension != fileExtension[1] && extension != fileExtension[2] && extension != fileExtension[3]) {
-						alert("Invalid extension! Only fastq, fasta, fna, and fa formats are allowed.");
+					if (extension != fileExtension[0] && extension != fileExtension[1] && extension != fileExtension[2] && extension != fileExtension[3] && extension != fileExtension[4]) {
+						alert("Invalid extension! Only fastq, fasta, fna, fa, and gz formats are allowed.");
 						return false; 
 					}
 					
