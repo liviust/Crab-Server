@@ -40,11 +40,11 @@ zip -r quast-reports quast-reports/*
 #Execute mongo commands through shell scripts
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript_species.js
 date "+TIME: %H:%M:%S"
-#Extract partial sequence:1-100000
-samtools faidx $contigs $(cat $contigs | /bip7_disk/WWW/WWW/www/Crab/Model/bioawk/bioawk -c fastx '{ print length($seq), $name }' | sort -k1,1rn | head -1 | cut -f 2):1-100000 > $path_to_ncbi_output/contigs.draft
+#Extract partial sequence:1-40000
+samtools faidx $contigs $(cat $contigs | /bip7_disk/WWW/WWW/www/Crab/Model/bioawk/bioawk -c fastx '{ print length($seq), $name }' | sort -k1,1rn | head -1 | cut -f 2):1-40000 > $path_to_ncbi_output/contigs.draft
 
 #species identification
-/bip7_disk/WWW/WWW/www/Crab/Model/ncbi-blast-2.6.0+/bin/blastn -task blastn -db /bip7_disk/WWW/WWW/www/Crab/Model/nt/nt -query $path_to_ncbi_output/contigs.draft -gilist /bip7_disk/WWW/WWW/www/Crab/Model/sequence_gi/bacteria.nt.gi.min.txt -evalue ${ncbi_cutoff} -outfmt 6 -out $path_to_ncbi_output/species.tsv -num_threads 10
+/bip7_disk/WWW/WWW/www/Crab/Model/ncbi-blast-2.6.0+/bin/blastn -task blastn -db /bip7_disk/WWW/WWW/www/Crab/Model/nt/nt -query $path_to_ncbi_output/contigs.draft -gilist /bip7_disk/WWW/WWW/www/Crab/Model/sequence_gi/bacteria.nt.gi.mid.txt -evalue ${ncbi_cutoff} -outfmt 6 -out $path_to_ncbi_output/species.tsv -num_threads 10
 
 #Generate a species report
 sort -k2,2 -k12,12nr $path_to_ncbi_output/species.tsv | awk '{if(! a[$2]){print; a[$2]++}}' > $path_to_ncbi_output/species.draft && sort -k12,12nr $path_to_ncbi_output/species.draft | sed -n 1,5p | cut -f 1,2,3,12 | awk '{print $2"\t"$1"\t"$3"\t"$4;}' > $path_to_ncbi_output/species.report
@@ -204,4 +204,4 @@ date "+TIME: %H:%M:%S"
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript.js
 
 #My job finished
-#php-cgi -f /bip7_disk/WWW/WWW/www/Crab/cgi-php.php job_id=${job_id} email=${email} googlename=${googlename}
+php-cgi -f /bip7_disk/WWW/WWW/www/Crab/cgi-php.php job_id=${job_id} email=${email} googlename=${googlename}

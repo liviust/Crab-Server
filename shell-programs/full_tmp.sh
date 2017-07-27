@@ -1,17 +1,21 @@
 #!/bin/bash
 #Shell variables
 filename=$1
-ncbi_cutoff=$2
-vfdb_cutoff=$3
-vfdb_threshold_id=$4
-vfdb_min_length=$5
-card_cutoff=$6
-card_threshold_id=$7
-card_min_length=$8
-google_id=$9
-job_id=${10}
-email=${11}
-googlename=${12}
+AssemblyPrefix=$2
+types_of_analysis=$3
+target_file=$4
+ncbi_cutoff=$5
+genomeSize=$6
+vfdb_cutoff=$7
+vfdb_threshold_id=$8
+vfdb_min_length=$9
+card_cutoff=${10}
+card_threshold_id=${11}
+card_min_length=${12}
+google_id=${13}
+job_id=${14}
+email=${15}
+googlename=${16}
 
 #create a new storage folder
 mkdir ${filename}/quast-reports
@@ -24,22 +28,30 @@ path_to_vfdb_output="/bip7_disk/WWW/WWW/www/Crab/${filename}/vfdb-reports"
 path_to_card_output="/bip7_disk/WWW/WWW/www/Crab/${filename}/card-reports"
 #echo $path_to_quast_output
 
+#Execute mongo commands through shell scripts
+mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript_canu.js
+date "+TIME: %H:%M:%S"
 #Assembling
-#./Model/canu/Linux-amd64/bin/canu -d ${filename}/ -p ${AssemblyPrefix} gnuplot=/usr/bin/gnuplot genomeSize=$genomeSize useGrid=false maxThreads=10 ${types_of_analysis} ${target_file}
-
+/bip7_disk/WWW/WWW/www/Crab/Model/canu/Linux-amd64/bin/canu -d ${filename}/ -p ${AssemblyPrefix} gnuplot=/usr/bin/gnuplot genomeSize=$genomeSize useGrid=false maxThreads=10 ${types_of_analysis} ${target_file}
+date "+TIME: %H:%M:%S"
 #The assembled contigs
-contigs="/bip7_disk/WWW/WWW/www/Crab/${filename}/*.f*"
+contigs="/bip7_disk/WWW/WWW/www/Crab/${filename}/*.contigs.fasta"
+#echo $contigs
+
+#Zipping contigs
+cd $path_to_quast_output/..
+zip ${AssemblyPrefix}.contigs.zip ${AssemblyPrefix}.contigs.fasta
 
 #QUAST
-./Model/QUAST/quast-4.5/quast.py $contigs -o $path_to_quast_output
+/bip7_disk/WWW/WWW/www/Crab/Model/QUAST/quast-4.5/quast.py $contigs -o $path_to_quast_output
 
-#Zipping Files
+#Zipping QUAST Files
 cd $path_to_quast_output/..
 zip -r quast-reports quast-reports/*
 
 #Execute mongo commands through shell scripts
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript_species.js
-date "+TIME: %H:%M:%S"
+
 #Extract partial sequence:1-100000
 samtools faidx $contigs $(cat $contigs | /bip7_disk/WWW/WWW/www/Crab/Model/bioawk/bioawk -c fastx '{ print length($seq), $name }' | sort -k1,1rn | head -1 | cut -f 2):1-100000 > $path_to_ncbi_output/contigs.draft
 
@@ -75,7 +87,7 @@ echo "Find files with specific extensions: "$queryInput
 
 #Execute mongo commands through shell scripts
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript_VFs.js
-date "+TIME: %H:%M:%S"
+
 #Virulence
 /bip7_disk/WWW/WWW/www/Crab/Model/ncbi-blast-2.6.0+/bin/blastx -query $queryInput -db /bip7_disk/WWW/WWW/www/Crab/Model/VFDB_v170317/db_setB -evalue ${vfdb_cutoff} -outfmt 6 -out $path_to_vfdb_output/virulence.tsv -num_threads 10
 
@@ -146,7 +158,7 @@ rm -f $path_to_vfdb_output/1to1 $path_to_vfdb_output/1to2 $path_to_vfdb_output/1
 
 #Execute mongo commands through shell scripts
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript_AMR.js
-date "+TIME: %H:%M:%S"
+
 #Resistance
 /bip7_disk/WWW/WWW/www/Crab/Model/ncbi-blast-2.6.0+/bin/blastx -query $queryInput -db /bip7_disk/WWW/WWW/www/Crab/Model/CARD_170306/db_card -evalue ${card_cutoff} -outfmt 6 -out $path_to_card_output/AMR.tsv -num_threads 10
 
@@ -199,7 +211,7 @@ cat $path_to_card_output/card.join.sunburst.draft.mass | cut -f 4,9,20,1,13,14,3
 cat $path_to_card_output/card.join.sunburst.draft.mass | sed 's/ /%/g' | awk '{print $1"\t"$8"\t"$6"\t"$4"\t"$9"\t"$10"\t"$11"\t"$12"\t"$13"\t"$14"\t"$15"\t"$16"\t"$17"\t"$18"\t"$19"\t"$20"\t"$3"\t"$5"\thttps://card.mcmaster.ca/ontology/"$2}' | sed 's/\t/,/g' | sed 's/%/ /g' > $path_to_card_output/AMR-coverage-results-merge
 
 echo $'Contig\tAMRLength\tAROID\tAMRgene\tIdentity\tAlignLength\tMismatch\tGapOpen\tContigStart\tContigEnd\tAMRDBStart\tAMRDBEnd\tE-value\tBitScore\tOrientation\tAMRCoverage\tPredicted%Phenotype\tAntibiotic%Agent\tOntology' | cat - $path_to_card_output/AMR-coverage-results-merge | sed 's/\t/,/g'| sed 's/%/ /g' > $path_to_card_output/CARD-blast-results.csv
-date "+TIME: %H:%M:%S"
+
 #Execute mongo commands through shell scripts
 mongo --nodb --quiet --eval "var user_id='"${google_id}"', job_id='"${job_id}"';" /bip7_disk/WWW/WWW/www/Crab/Model/mongo_shell/mongoscript.js
 
