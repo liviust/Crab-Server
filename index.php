@@ -27,6 +27,7 @@
 	//Config
 	require_once('config/db_conn.php');
 	$collection = 'google_users';
+	$__collection = 'users';
 	
 	//Create Client Request to access Google API
 	$client = new Google_Client(); //Google_Client is a class provided by the Google PHP SDK
@@ -134,6 +135,73 @@ small, .small {
 <!--<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
 --><div class="container">
   <div class="page-header">  
+
+<?php
+
+//
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+	$email = $_POST['SignInEmail'];
+	$password = md5($_POST['SignInPassword']);
+	
+	// Construct a write concern
+	$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
+	
+	// Create a bulk write object and add our insert operation
+	$bulk = new MongoDB\Driver\BulkWrite();
+
+	// Construct a query array:
+	$filter = array(
+	   '$and' => array( 
+		  array('Email' => $email),
+		  array('Password' => $password)
+	   )
+	);
+
+	$query = new MongoDB\Driver\Query($filter);
+	$user_count = 0;
+	
+	try {
+	
+		$cursor = $manager->executeQuery($dbname.'.'.$__collection, $query);
+
+		// Iterate over all matched documents
+		foreach ($cursor as $document) {
+			$user_count++; //will return 0 if user doesn't exist
+			$__Email = !empty($document->Email) ? $document->Email : '';	
+			$__Password = !empty($document->Password) ? $document->Password : '';
+			$__Username = !empty($document->Username) ? $document->Username : '';
+			$__id = !empty($document->_id) ? $document->_id : '';
+		}
+
+	} catch (MongoDB\Driver\Exception\Exception $e) {
+		//handle the exception
+		echo $e->getMessage(), "\n";
+	}
+	
+	if($user_count){
+		$_SESSION['Email'] = $__Email;
+		$_SESSION['Username'] = $__Username;
+		$_SESSION['_id'] = $__id;
+	}else{
+		
+	}
+
+	// If result matched $myusername and $mypassword, table row must be 1 row
+	
+/*	if($count == 1) {
+		session_register("myusername");
+		$_SESSION['login_user'] = $myusername;
+		
+		header("location: welcome.php");
+	}else {
+		$error = "Your Login Name or Password is invalid";
+	}*/
+	
+	
+}
+?>
+
   
  <!-- Dialog start -->
 <form id="SignInForm" enctype="multipart/form-data" method="post" action="" autocomplete="off">
@@ -148,18 +216,19 @@ small, .small {
           <p>Don’t have an account? <a href="signup.php" target="_blank" style="text-decoration: underline;">Sign up</a></p>
             <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="nope" required="required">
+            <input type="email" name="SignInEmail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" autocomplete="nope" required="required" autofocus="autofocus">
             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
             <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" autocomplete="new-password" required="required">
+            <input type="password" name="SignInPassword" class="form-control" id="exampleInputPassword1" placeholder="Password" autocomplete="new-password" required="required">
             </div>
+            <a class="login-link" href="#">Lost your password?</a>
           <!--<hr />-->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" id="">Sign</button>
+          <button type="submit" class="btn btn-primary" name="login">Sign</button>
         </div>
       </div>
       <!-- /.modal-content --> 
