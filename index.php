@@ -130,11 +130,30 @@ small, .small {
     font-size: 85%;
 }*/
 </style>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script> 
 </head>
 <body>
 <!--<body ONDRAGSTART="window.event.returnValue=false" onSelectStart="event.returnValue=false" ONCONTEXTMENU="window.event.returnValue=false">
 --><div class="container">
-  <div class="page-header">  
+  <div class="page-header">
+  
+  <?php $fmsg = "Your Login Email or Password is invalid" ?>
+  <?php $smsg = "Successfully Logged In!" ?>
+    
+    <div id="showHide" style="display:none;" class="alert alert-danger" role="alert"><?= $fmsg; ?></div>
+    <div id="__showHide" style="display:none;" class="alert alert-success" role="alert"><?= $smsg; ?></div>
+    
+	<script type="text/javascript">
+    function LoginFailure(){
+        document.getElementById('showHide').style.display = 'block';
+		$('#showHide').delay(3000).fadeOut('slow');	
+    }
+	
+    function LoginSuccess(){
+        document.getElementById('__showHide').style.display = 'block';
+		$('#__showHide').delay(3000).fadeOut('slow');	
+    }
+    </script>
 
 <?php
 
@@ -183,27 +202,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$_SESSION['Email'] = $__Email;
 		$_SESSION['Username'] = $__Username;
 		$_SESSION['_id'] = $__id;
+		
+		echo '<script type="text/javascript">',
+			 'LoginSuccess();',
+			 '</script>';
 	}else{
-		
-	}
-
-	// If result matched $myusername and $mypassword, table row must be 1 row
-	
-/*	if($count == 1) {
-		session_register("myusername");
-		$_SESSION['login_user'] = $myusername;
-		
-		header("location: welcome.php");
-	}else {
-		$error = "Your Login Name or Password is invalid";
-	}*/
-	
-	
+		echo '<script type="text/javascript">',
+			 'LoginFailure();',
+			 '</script>';
+	}	
 }
 ?>
-
-  
- <!-- Dialog start -->
+<!-- Dialog start -->
 <form id="SignInForm" enctype="multipart/form-data" method="post" action="" autocomplete="off">
   <div class="modal fade" tabindex="-1" role="dialog" id="loginForm">
     <div class="modal-dialog" role="document">
