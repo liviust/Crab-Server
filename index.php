@@ -151,7 +151,7 @@ small, .small {
 	
     function LoginSuccess(){
         document.getElementById('__showHide').style.display = 'block';
-		$('#__showHide').delay(3000).fadeOut('slow');	
+		$('#__showHide').delay(3000).fadeOut('slow');
     }
     </script>
 
@@ -161,7 +161,7 @@ small, .small {
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$email = $_POST['SignInEmail'];
-	$password = md5($_POST['SignInPassword']);
+	$password = base64_encode($_POST['SignInPassword']);
 	
 	// Construct a write concern
 	$wc = new MongoDB\Driver\WriteConcern(MongoDB\Driver\WriteConcern::MAJORITY,1000);
@@ -186,22 +186,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
 		// Iterate over all matched documents
 		foreach ($cursor as $document) {
+			
 			$user_count++; //will return 0 if user doesn't exist
+			
 			$__Email = !empty($document->Email) ? $document->Email : '';	
-			$__Password = !empty($document->Password) ? $document->Password : '';
 			$__Username = !empty($document->Username) ? $document->Username : '';
-			$__id = !empty($document->_id) ? $document->_id : '';
 		}
 
 	} catch (MongoDB\Driver\Exception\Exception $e) {
 		//handle the exception
-		echo $e->getMessage(), "\n";
+		echo $e->getMessage(), "\n";		
 	}
 	
 	if($user_count){
 		$_SESSION['Email'] = $__Email;
 		$_SESSION['Username'] = $__Username;
-		$_SESSION['_id'] = $__id;
 		
 		echo '<script type="text/javascript">',
 			 'LoginSuccess();',
@@ -233,7 +232,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="exampleInputPassword1">Password</label>
             <input type="password" name="SignInPassword" class="form-control" id="exampleInputPassword1" placeholder="Password" autocomplete="new-password" required="required">
             </div>
-            <a class="login-link" href="#">Lost your password?</a>
+            <a class="login-link" href="forgot-password.php">Lost your password?</a>
           <!--<hr />-->
         </div>
         <div class="modal-footer">
@@ -251,10 +250,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php 
 		if(isset($authUrl)){ 
 			//show Log in
-			echo '<div style="text-align:right">';
-			echo '<a class="login" href="" data-toggle="modal" data-target="#loginForm"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign in</a>';
-			echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
-			echo '<a class="login" href="' . $authUrl . '"><span class="fa fa-google"></span>&nbsp;Google Login</a>';
+			echo '<div style="text-align:right; color:#337ab7">';
+			
+			if(isset($_SESSION['Email'])){
+				echo "<span class='glyphicon glyphicon-user'></span>&nbsp;Welcome ".$_SESSION['Username']."!";
+				echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
+				echo '<a href = "logout.php"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign Out</a>';
+			}
+			else{
+				echo '<a class="login" href="" data-toggle="modal" data-target="#loginForm"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign in</a>';
+				echo "&nbsp;&nbsp;|&nbsp;&nbsp;";		
+			}
+			
+			if(!isset($_SESSION['Email'])){
+				echo '<a class="login" href="' . $authUrl . '"><span class="fa fa-google"></span>&nbsp;Google Login</a>';
+			}
+			
 			echo '</div>';			
 		}else {
 			//get user info 
