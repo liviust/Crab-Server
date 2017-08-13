@@ -1,4 +1,6 @@
 <?php
+	session_start();
+
 	if (session_status() == PHP_SESSION_NONE) {
 	  //session_save_path("5;/tmp"); 
 	//session_save_path('/var/lib/php/session');
@@ -6,7 +8,7 @@
 	//session_save_path('/tmp');
 	
 	//ini_set('session.gc_probability', 1);
-	session_start();
+	//session_start();
 
 	}
 	
@@ -157,9 +159,8 @@ small, .small {
 
 <?php
 
-//
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+	
 	$email = $_POST['SignInEmail'];
 	$password = base64_encode($_POST['SignInPassword']);
 	
@@ -184,23 +185,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	
 		$cursor = $manager->executeQuery($dbname.'.'.$__collection, $query);
 
-		// Iterate over all matched documents
+		// Iterate over all matched documents		
 		foreach ($cursor as $document) {
+
+			$user_count++; //will return 0 if user doesn't exist
+			
+			$__Email = !empty($document->Email) ? $document->Email : '';	
+			$__Username = !empty($document->Username) ? $document->Username : '';
+			$oid = (string)$document->_id;
+		}
+		
+		
+		/*foreach ($cursor as $document) {
 			
 			$user_count++; //will return 0 if user doesn't exist
 			
 			$__Email = !empty($document->Email) ? $document->Email : '';	
 			$__Username = !empty($document->Username) ? $document->Username : '';
-		}
+			$oid = !empty($document->_id) ? $document->_id : '';
+			
+			//var_dump($document);
+			//echo '<pre>';
+		   // print_r($document);
+		    // echo '</pre>';
+		
+		}*/
+		
+		//echo $__Email;
+		
+		
+		//exit();
 
 	} catch (MongoDB\Driver\Exception\Exception $e) {
 		//handle the exception
 		echo $e->getMessage(), "\n";		
 	}
-	
+
 	if($user_count){
 		$_SESSION['Email'] = $__Email;
 		$_SESSION['Username'] = $__Username;
+		$_SESSION['_id'] = $oid;
 		
 		echo '<script type="text/javascript">',
 			 'LoginSuccess();',
@@ -210,10 +234,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 			 'LoginFailure();',
 			 '</script>';
 	}	
+	
 }
+/*echo $_SESSION['Email'];
+echo $_SESSION['Username'];
+echo $_SESSION['_id'];
+
+print_r($_SESSION);*/
+
+
 ?>
+
 <!-- Dialog start -->
-<form id="SignInForm" enctype="multipart/form-data" method="post" action="" autocomplete="off">
+<form id="SignInForm" name="SignInForm" enctype="multipart/form-data" method="post" action="" autocomplete="off">
   <div class="modal fade" tabindex="-1" role="dialog" id="loginForm">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -248,6 +281,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
   <!-- Dialog end -->
 </form>
     <?php 
+
 		if(isset($authUrl)){ 
 			//show Log in
 			echo '<div style="text-align:right; color:#337ab7">';
@@ -369,7 +403,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 	?>
     <h1>Cяab Server<small> <!--Bacterial Genome Annotation Service-->Steps Progress</small>
       <?php
-	if (isset($user->id))
+	//if (isset($user->id))
+	if (isset($user->id) || isset($_SESSION['Email']))
 		echo("<a href='jobs.php'><button type='button' class='btn btn-warning btn-sm'><span class='glyphicon glyphicon-bell'></span> Jobs</button></a>");	
 	?>
     </h1>
@@ -437,11 +472,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="form-group">
         <label for="Email">E-mail</label>
         <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="<?php 
-		if(isset($_GET['logout'])){
+		if(isset($_GET['logout']) && !isset($_SESSION['Email'])){
 			echo "foo@example.com";
 			//session_destroy();
 		} else if (isset($user->id)){
 			echo $_SESSION['google_email'];
+		} else if(isset($_SESSION['Email'])){
+			echo $_SESSION['Email'];
 		}else{
 			echo "foo@example.com";
 		}		
@@ -450,7 +487,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         <small id="emailHelp" class="form-text text-muted">We will email you a link to your page with your quality assessment reports. <br />
         We will also notify you when your report is finished, and contact you if any problems arise.</small> </div>
       <?php
-      if (isset($user->id)){
+      if (isset($user->id) || isset($_SESSION['Email'])){
 		  echo("<button id='initial_step' type='button' class='btn btn-primary' onclick='goToNextStep(2)'>Activate Step 2</button>");
 		  
 		  //Button trigger modal
@@ -869,6 +906,24 @@ if (isset($user->id)){
 if (isset($user->id)){
 echo $_SESSION['google_email'];
 }?>">
+
+<!-- mongo-users - START -->
+  <input type="hidden" class="" id="oid" value="<?php 
+if (isset($_SESSION['Email'])){
+echo $_SESSION['_id'];
+}?>">
+
+  <input type="hidden" class="" id="user_name" value="<?php 
+if (isset($_SESSION['Email'])){
+echo $_SESSION['Username'];
+}?>">
+
+  <input type="hidden" class="" id="mongo_email" value="<?php 
+if (isset($_SESSION['Email'])){
+echo $_SESSION['Email'];
+}?>">
+
+<!-- mongo-users - END -->
   
   <!--<input type="hidden" name="Language" value="English">--> 
   <!-- pseudo div - END -->

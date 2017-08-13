@@ -109,6 +109,34 @@
 <div class="container">
   <div class="page-header">
     <?php
+	if(!isset($_SESSION['google_id']) && !isset($_SESSION['Email'])){
+		
+		echo "123";
+		echo $_SESSION['Email'];
+		
+/*		echo "<script>alert('You must be logged in to use this feature.')</script>";
+		echo ("<script>location.href='index.php'</script>");*/
+				
+	}else if(!isset($_SESSION['google_id']) && isset($_SESSION['Email'])){
+		
+		//Password-based Login
+		echo '<div style="text-align:right; color:#337ab7">';
+		echo "<span class='glyphicon glyphicon-user'></span>&nbsp;Welcome ".$_SESSION['Username']."!";
+		echo "&nbsp;&nbsp;|&nbsp;&nbsp;";
+		echo '<a href = "logout.php"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign Out</a>';
+		echo '</div>';
+		
+	}else if(isset($_SESSION['google_id']) && !isset($_SESSION['Email'])){
+		
+		//Google Login
+		echo '<div style="text-align:right">';
+		echo '<img src="'.$_SESSION['google_picture_link'].'" class="circular" />';
+		echo '&nbsp;'.$_SESSION['google_name'].'  <a href="'.$redirect_uri.'?logout=1"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>';
+		echo '</div>';
+	}
+  ?>
+  
+<?php /*?>    <?php
 	if(!isset($_SESSION['google_id'])){
 		echo "<script>alert('You must be logged in to use this feature.')</script>";
 		echo ("<script>location.href='index.php'</script>");
@@ -118,10 +146,12 @@
 		echo '&nbsp;'.$_SESSION['google_name'].'  <a href="'.$redirect_uri.'?logout=1"><span class="glyphicon glyphicon-log-out"></span> Log Out</a>';
 		echo '</div>';
 	}
-  ?>
+  ?><?php */?>
+
     <h1>Cяab Server<small> Submissions</small>
       <?php
-	if (isset($_SESSION['google_id']))
+	//if (isset($_SESSION['google_id']))
+	if (isset($_SESSION['google_id']) || isset($_SESSION['Email']))
 		echo("<a href='index.php'><button type='button' class='btn btn-warning btn-sm'><span class='glyphicon glyphicon-home'></span> Home Page</button></a>");	
 	?>
     </h1>
@@ -187,7 +217,8 @@ $(document).ready(function(){
 			}
 		} );
 		
-		<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?>
+		<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?> //5980455ffda14397ad29b832
+		
 
 /*		$('.delete').click(function() {
 			
