@@ -238,10 +238,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 }
 /*echo $_SESSION['Email'];
 echo $_SESSION['Username'];
-echo $_SESSION['_id'];
+echo $_SESSION['_id'];*/
 
-print_r($_SESSION);*/
-
+//print_r($_SESSION);
 
 ?>
 

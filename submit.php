@@ -19,11 +19,15 @@
 		echo $e->getMessage(), "\n";
 	}	
 	
-
 	// Construct a query with filter
-	$filter = ['user_id' => $_SESSION['google_id']];
+	if(isset($_SESSION['google_id'])){ //Google Login
+		$filter = ['user_id' => $_SESSION['google_id']];
+	}else if(isset($_SESSION['_id'])){ //Password-based Login
+		$filter = ['user_id' => $_SESSION['_id']];
+	}
 	
-	//$filter = ['user_id' => '117555268755893720105'];
+	//$filter = ['user_id' => $_SESSION['google_id']];
+	
 	$query = new MongoDB\Driver\Query($filter);
 	
 	try {

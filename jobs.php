@@ -3,6 +3,9 @@
 	//session_save_path('/tmp');
 	  session_start();
 	}
+	
+	//print_r($_SESSION);
+	
 	header("refresh: 180;");
 	//Include Google client library 
 	require_once ('google-api-php-client-1.1.7/src/Google/autoload.php');
@@ -109,15 +112,11 @@
 <div class="container">
   <div class="page-header">
     <?php
-	if(!isset($_SESSION['google_id']) && !isset($_SESSION['Email'])){
-		
-		echo "123";
-		echo $_SESSION['Email'];
-		
-/*		echo "<script>alert('You must be logged in to use this feature.')</script>";
-		echo ("<script>location.href='index.php'</script>");*/
+	if(!isset($_SESSION['google_id']) && !isset($_SESSION['_id'])){
+		echo "<script>alert('You must be logged in to use this feature.')</script>";
+		echo ("<script>location.href='index.php'</script>");
 				
-	}else if(!isset($_SESSION['google_id']) && isset($_SESSION['Email'])){
+	}else if(!isset($_SESSION['google_id']) && isset($_SESSION['_id'])){
 		
 		//Password-based Login
 		echo '<div style="text-align:right; color:#337ab7">';
@@ -126,7 +125,7 @@
 		echo '<a href = "logout.php"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Sign Out</a>';
 		echo '</div>';
 		
-	}else if(isset($_SESSION['google_id']) && !isset($_SESSION['Email'])){
+	}else if(isset($_SESSION['google_id']) && !isset($_SESSION['_id'])){
 		
 		//Google Login
 		echo '<div style="text-align:right">';
@@ -151,7 +150,7 @@
     <h1>Cяab Server<small> Submissions</small>
       <?php
 	//if (isset($_SESSION['google_id']))
-	if (isset($_SESSION['google_id']) || isset($_SESSION['Email']))
+	if (isset($_SESSION['google_id']) || isset($_SESSION['_id']))
 		echo("<a href='index.php'><button type='button' class='btn btn-warning btn-sm'><span class='glyphicon glyphicon-home'></span> Home Page</button></a>");	
 	?>
     </h1>
@@ -216,9 +215,22 @@ $(document).ready(function(){
 				$(this).addClass('selected');
 			}
 		} );
-		
-		<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?> //5980455ffda14397ad29b832
-		
+
+		if(<?=isset($_SESSION['google_id']) && !isset($_SESSION['_id']); ?>){
+				
+			//Google Login (Undefined index: _id)
+			<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?> 
+		}else{
+
+<?php /*?>			//Password-based Login (Undefined index: google_id)
+			<?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?><?php */?>
+			
+		}		
+<?php /*?>		else if(<?=!isset($_SESSION['google_id']) && isset($_SESSION['_id']); ?>){
+			
+			//Password-based Login
+			<?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?>
+		}<?php */?>
 
 /*		$('.delete').click(function() {
 			
