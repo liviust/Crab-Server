@@ -215,22 +215,23 @@ $(document).ready(function(){
 				$(this).addClass('selected');
 			}
 		} );
-
+		
+		/*
+		$_SESSION['google_id'] for Google Login
+		$_SESSION['_id'] for Password-based Login
+		*/
+		
+		//Undefined index:
 		if(<?=isset($_SESSION['google_id']) && !isset($_SESSION['_id']); ?>){
 				
-			//Google Login (Undefined index: _id)
+			//Google Login
 			<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?> 
 		}else{
 
-<?php /*?>			//Password-based Login (Undefined index: google_id)
-			<?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?><?php */?>
-			
-		}		
-<?php /*?>		else if(<?=!isset($_SESSION['google_id']) && isset($_SESSION['_id']); ?>){
-			
 			//Password-based Login
 			<?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?>
-		}<?php */?>
+			
+		}
 
 /*		$('.delete').click(function() {
 			
