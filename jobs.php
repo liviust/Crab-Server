@@ -227,10 +227,9 @@ $(document).ready(function(){
 			//Google Login
 			<?= 'var google_id = '.json_encode($_SESSION['google_id']).';'; ?> 
 		}else{
-
-			//Password-based Login
-			<?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?>
 			
+			//Password-based Login
+			<?php /*?><?= 'var google_id = '.json_encode($_SESSION['_id']).';'; ?><?php */?>
 		}
 
 /*		$('.delete').click(function() {
